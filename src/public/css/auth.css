@@ -1,0 +1,63 @@
+
+.auth-content, .profile-content {
+    width: 100%;
+}
+
+.auth__title, .profile__title {
+    text-align: center;
+}
+
+.auth-group, .profile-group {
+    width: 100%;
+}
+
+.auth__item,
+.auth__form-btn, .profile__item, .profile__form-btn {
+    display: block;
+    margin: 0 auto;
+}
+
+.auth__item-title, .profile__item-title {
+    font-size: 17px;
+    margin-bottom: 3px;
+    font-weight: bold;
+}
+
+.auth__item-input, .profile__item-input {
+    padding: 7px;
+    display: inline-block;
+}
+
+.auth__item,
+.auth__item-input,
+.auth__form-btn, .profile__item, .profile__item-input, .profile__form-btn {
+    width: 450px;
+}
+
+.auth__form-btn, .profile__form-btn {
+    background-color: #ff5151;
+    border: none;
+    color: white;
+    margin-top: 60px;
+    padding: 8px;
+    font-size: 15px;
+    border-radius: 3px;
+}
+
+.login-link, .register-link {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.login-link a ,.register-link a {
+    color: #42a0ff;
+    text-decoration: none;
+    font-size: 15px;
+}
+@media screen and (max-width: 850px) {
+    .auth__item,
+    .auth__item-input,
+    .auth__form-btn {
+        width: 350px;
+    }
+}
