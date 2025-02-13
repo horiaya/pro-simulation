@@ -15,6 +15,7 @@ class CreateConditionsTable extends Migration
     {
         Schema::create('conditions', function (Blueprint $table) {
             $table->id();
+            $table->string('condition', 100)->unique();
             $table->timestamps();
         });
     }
