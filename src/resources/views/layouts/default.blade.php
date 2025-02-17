@@ -32,7 +32,15 @@
     .header__nav {
         line-height: 55px;
     }
-    .header__nav-link {
+    .header-logout__form {
+        display: inline-block;
+    }
+    .header-logout__btn {
+        border:none;
+        background-color: black;
+        font-size: 17px;
+    }
+    .header__nav-link, .header-logout__btn {
         color: white;
         text-decoration: none;
         margin: 0 10px;
@@ -67,7 +75,10 @@
                 <input class="header__search-input" type="search" placeholder="なにをお探しですか？">
             </div>
             <div class="header__nav">
-                <a class="header__nav-link" href="">ログアウト</a>
+                <form class="header-logout__form" action="{{ route('logout') }}" method="post">
+                @csrf
+                    <button class="header-logout__btn" type="submit">ログアウト</button>
+                </form>
                 <a class="header__nav-link" href="">マイページ</a>
                 <a class="header__nav-link" href="">出品</a>
             </div>

@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\Auth\CustomRegisterController;
+use App\Http\Controllers\Auth\CustomLoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,15 +16,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/register', function () {
-    return view('auth.register');
-});
-Route::get('/login', function () {
-    return view('auth.login');
-});
+
 Route::get('/profile', function () {
     return view('auth.profile');
 });
 Route::get('/verify-email', function () {
     return view('auth.verify-email');
+})->name('verify-email');
+Route::get('/register', [CustomRegisterController::class, 'create'])->name('register');
+Route::post('/register', [CustomRegisterController::class, 'store']);
+Route::get('/login', [CustomLoginController::class, 'create'])->name('login');
+Route::post('/login', [CustomLoginController::class, 'store']);
+Route::post('/logout', [CustomLoginController::class, 'logout'])->name('logout');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/', [ItemController::class, 'index'])->name('index');
 });
