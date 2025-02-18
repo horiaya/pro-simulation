@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Auth\CustomRegisterController;
 use App\Http\Controllers\Auth\CustomLoginController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,9 +18,8 @@ use App\Http\Controllers\Auth\CustomLoginController;
 */
 
 
-Route::get('/profile', function () {
-    return view('auth.profile');
-});
+
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 Route::get('/verify-email', function () {
     return view('auth.verify-email');
 })->name('verify-email');
@@ -31,4 +31,5 @@ Route::post('/logout', [CustomLoginController::class, 'logout'])->name('logout')
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [ItemController::class, 'index'])->name('index');
+    Route::get('/detail/{id}', [ItemController::class, 'show'])->name('item.detail');
 });
