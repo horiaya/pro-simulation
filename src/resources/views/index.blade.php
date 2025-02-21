@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
-<div class="item__group">
+<div class="item-group">
     @foreach($items as $item)
     <div class="item__list">
         <a class="item__list-link" href="{{ route('item.detail', ['id' => $item->id]) }}">

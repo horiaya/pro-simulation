@@ -9,6 +9,8 @@ class Item extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -37,5 +39,10 @@ class Item extends Model
     public function myLists()
     {
         return $this->hasMany(MyList::class);
+    }
+
+    public function itemCategories()
+    {
+        return $this->belongsToMany(Category::class, 'item_categories', 'item_id', 'category_id');
     }
 }

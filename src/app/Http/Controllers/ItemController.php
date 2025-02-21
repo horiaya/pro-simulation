@@ -16,8 +16,12 @@ class ItemController extends Controller
 
     public function show($id)
     {
-        $item = Item::with(['category', 'condition', 'comments'])->findOrFail($id);
+        $item = Item::with(['category', 'condition', 'itemCategories', 'comments', 'user'])->findOrFail($id);
 
-        return view('detail', compact('item'));
+        $myListCount = $item->myLists()->count();
+
+        $commentCount = $item->comments()->count();
+
+        return view('detail', compact('item', 'myListCount', 'commentCount'));
     }
 }
