@@ -15,6 +15,22 @@
     margin: 5px;
 }
 
+#recommendBtn, #mylistBtn {
+    border: none;
+    background-color: white;
+    font-size: 20px;
+    margin-left: 70px;
+}
+.item__list-tab {
+    border-bottom: 1px solid gray;
+    padding: 10px 0 0 100px;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 45px;
+}
+
 @media screen and (max-width: 850px) {
     .item__list-img {
         height: 150px;

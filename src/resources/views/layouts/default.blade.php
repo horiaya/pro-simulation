@@ -72,10 +72,14 @@
     <header>
         <div class="header-content">
             <div class="header__logo">
-                <img class="header__img" src="{{ asset('storage/images/logo.svg') }}" alt="コーチテックのロゴ">
+                <a href="{{ route('index') }}">
+                    <img class="header__img" src="{{ asset('storage/images/logo.svg') }}" alt="コーチテックのロゴ">
+                </a>
             </div>
             <div class="header__search">
-                <input class="header__search-input" type="search" placeholder="なにをお探しですか？">
+                <form id="searchForm" class="header__search-form" action="{{ route('index') }}" method="get">
+                    <input class="header__search-input search__name" type="text" name="keyword" placeholder="なにをお探しですか？" onkeypress="submitOnEnter(event)" value="{{ request('keyword') }}" />
+                </form>
             </div>
             <div class="header__nav">
                 <form class="header-logout__form" action="{{ route('logout') }}" method="post">
@@ -94,3 +98,11 @@
     </main>
 </body>
 </html>
+<script>
+    function submitOnEnter(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            document.getElementById('searchForm').submit();
+        }
+    }
+</script>

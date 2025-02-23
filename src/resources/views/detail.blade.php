@@ -34,8 +34,8 @@
         <div class="information-item">
             <h2 class="information__item-title">商品の情報</h2>
                 <p class="information__item-tag">カテゴリー
-                    @foreach ($item->itemCategories as $itemCategory)
-                        <span class="information__item-genre">{{ $itemCategory->category }}</span>
+                    @foreach ($item->categories as $category)
+                        <span class="information__item-genre">{{ $category->category }}</span>
                     @endforeach
                 </p>
                 <p class="information__item-tag">商品の状態

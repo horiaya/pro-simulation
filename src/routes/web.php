@@ -29,7 +29,10 @@ Route::get('/login', [CustomLoginController::class, 'create'])->name('login');
 Route::post('/login', [CustomLoginController::class, 'store']);
 Route::post('/logout', [CustomLoginController::class, 'logout'])->name('logout');
 
+Route::get('/', [ItemController::class, 'index'])->name('index');
+Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
+
 Route::middleware('auth')->group(function () {
-    Route::get('/', [ItemController::class, 'index'])->name('index');
-    Route::get('/detail/{id}', [ItemController::class, 'show'])->name('item.detail');
+    //Route::get('/', [ItemController::class, 'index'])->name('index');
+    //Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
 });

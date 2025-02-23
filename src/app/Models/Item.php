@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Item extends Model
 {
@@ -41,8 +42,36 @@ class Item extends Model
         return $this->hasMany(MyList::class);
     }
 
-    public function itemCategories()
+    public function categories()
     {
         return $this->belongsToMany(Category::class, 'item_categories', 'item_id', 'category_id');
+    }
+
+    /*public function scopeKeyword(Builder $query, $keyword)
+    {
+        if (!empty($keyword)) {
+            return $query->where('item_name', 'like', "%{$keyword}%");
+        }
+        return $query;
+    }
+
+    public function scopeCategoryKeyword(Builder $query, $categoryKeyword)
+    {
+        if (!empty($categoryKeyword)) {
+            return $query->whereHas('categories', function ($q) use ($categoryKeyword) {
+                $q->where('name', 'like', "%{$categoryKeyword}%");
+            });
+        }
+        return $query;
+    }*/
+
+    public function scopeSearch(Builder $query, $keyword)
+    {
+        if (!empty($keyword)) {
+            return $query->where(function ($q) use ($keyword) {
+                $q->where('item_name', 'like', "%{$keyword}%");
+            });
+        }
+        return $query;
     }
 }
