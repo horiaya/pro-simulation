@@ -51,11 +51,6 @@ class User extends Authenticatable
         return $this->hasMany(Item::class);
     }
 
-    public function my_lists()
-    {
-        return $this->hasMany(MyList::class);
-    }
-
     public function purchases()
     {
         return $this->hasMany(purchase::class);
@@ -64,5 +59,15 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class, 'sender_id', 'id');
+    }
+
+    public function myLists()
+    {
+        return $this->hasMany(MyList::class);
+    }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Item::class, 'my_lists', 'user_id', 'item_id');
     }
 }

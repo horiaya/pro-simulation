@@ -20,6 +20,11 @@
     background-color: white;
     font-size: 20px;
     margin-left: 70px;
+    color: gray;
+}
+#recommendBtn.active,
+#mylistBtn.active {
+    color: #ff5151;
 }
 .item__list-tab {
     border-bottom: 1px solid gray;

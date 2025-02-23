@@ -1,10 +1,6 @@
 @extends('layouts.default')
 
 @section('content')
-<div class="detail__return">
-    <a class="detail__return-btn" href="{{ route('index') }}"
-    ><i class="fa-solid fa-chevron-left"></i></a>
-</div>
 <div class="detail__item">
     <div class="detail__item--left">
         <img class="detail__item-img" src="{{ asset('storage/item_image/' . $item->item_image) }}" alt="商品画像">
@@ -15,8 +11,8 @@
             <p class="top-item__price"><span class="top-item__price--small">¥</span>{{ number_format($item->price) }}<span class="top__item-price--small">(税込)</span></p>
             <div class="item__count">
                 <div class="item__count-list">
-                    <i class="fa-regular fa-star"></i>
-                    <small class="item__count-small">{{ $myListCount ?? 0 }}</small>
+                    <i id="star-icon" class="fa-{{ $isInMyList ? 'solid' : 'regular' }} fa-star" style="color: {{ $isInMyList ? '#fcc800' : '#484848' }};" data-item-id="{{ $item->id }}"></i>
+                    <small id="mylist-count" class="item__count-small">{{ $myListCount ?? 0 }}</small>
                 </div>
                 <div class="item__count-list">
                     <i class="fa-regular fa-comment"></i>
@@ -60,4 +56,40 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let starIcon = document.getElementById('star-icon');
+        let myListCount = document.getElementById('mylist-count');
+
+        starIcon.addEventListener('click', function () {
+            let itemId = this.dataset.itemId;
+
+            fetch("{{ route('mylist.toggle') }}", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ item_id: itemId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'added') {
+                    starIcon.classList.remove('fa-regular');
+                    starIcon.classList.add('fa-solid');
+                    starIcon.style.color = "#fcc800";
+                } else {
+                    starIcon.classList.remove('fa-solid');
+                    starIcon.classList.add('fa-regular');
+                    starIcon.style.color = "#484848";
+                }
+
+                if (myListCount) {
+                    myListCount.textContent = data.count;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
 @endsection

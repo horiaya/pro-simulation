@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
+use App\Models\MyList;
+use App\Models\User;
+
 
 
 class ItemController extends Controller
@@ -19,7 +22,6 @@ class ItemController extends Controller
                     ->get();
 
         $items = $query;
-        $myListItems = Auth::check() ? Auth::user()->my_lists : [];
 
         $errorMessage = null;
         if ($items->isEmpty()) {
@@ -27,17 +29,19 @@ class ItemController extends Controller
         }
 
         return view('index', compact(
-            'items', 'keyword', 'errorMessage','myListItems'));
+            'items', 'keyword', 'errorMessage'));
     }
 
     public function show($id)
     {
         $item = Item::with(['category', 'condition', 'categories', 'comments', 'user'])->findOrFail($id);
+        $user = Auth::user();
 
-        $myListCount = $item->myLists()->count();
+        $myListCount = MyList::where('item_id', $id)->count();
+        $isInMyList = $user ? MyList::where('user_id', $user->id)->where('item_id', $id)->exists() : false;
 
         $commentCount = $item->comments()->count();
 
-        return view('detail', compact('item', 'myListCount', 'commentCount'));
+        return view('detail', compact('item', 'commentCount', 'myListCount', 'isInMyList'));
     }
 }

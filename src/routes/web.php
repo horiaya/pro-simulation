@@ -5,6 +5,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Auth\CustomRegisterController;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MyListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,5 +35,7 @@ Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
 
 Route::middleware('auth')->group(function () {
     //Route::get('/', [ItemController::class, 'index'])->name('index');
+    //Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
+    Route::post('/mylist/toggle', [MyListController::class, 'toggle'])->name('mylist.toggle');
     //Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
 });

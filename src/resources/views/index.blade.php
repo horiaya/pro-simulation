@@ -1,14 +1,14 @@
 @extends('layouts.default')
 
+@section('content')
 @if (!empty($errorMessage))
-    <div class="alert alert-search">
+    <div class="alert alert-search" style="text-align:center;">
         {{ $errorMessage }}
     </div>
 @endif
-@section('content')
 <div class="item__list-tab">
-    <button onclick="showTab('recommend')" id="recommendBtn" class="active" style="color:gray;">おすすめ</button>
-    <button onclick="showTab('mylist')" id="mylistBtn" style="color:red;">マイリスト</button>
+    <button onclick="showTab('recommend')" id="recommendBtn" class="active">おすすめ</button>
+    <button onclick="showTab('mylist')" id="mylistBtn">マイリスト</button>
 </div>
 <div id="recommendTab" class="item-group">
     @foreach($items as $item)

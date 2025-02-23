@@ -37,33 +37,20 @@ class Item extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function myLists()
-    {
-        return $this->hasMany(MyList::class);
-    }
-
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'item_categories', 'item_id', 'category_id');
     }
 
-    /*public function scopeKeyword(Builder $query, $keyword)
+    public function myLists()
     {
-        if (!empty($keyword)) {
-            return $query->where('item_name', 'like', "%{$keyword}%");
-        }
-        return $query;
+        return $this->hasMany(MyList::class);
     }
 
-    public function scopeCategoryKeyword(Builder $query, $categoryKeyword)
+    public function favorites()
     {
-        if (!empty($categoryKeyword)) {
-            return $query->whereHas('categories', function ($q) use ($categoryKeyword) {
-                $q->where('name', 'like', "%{$categoryKeyword}%");
-            });
-        }
-        return $query;
-    }*/
+        return $this->belongsToMany(User::class, 'my_lists', 'item_id', 'user_id');
+    }
 
     public function scopeSearch(Builder $query, $keyword)
     {
