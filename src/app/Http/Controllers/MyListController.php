@@ -13,9 +13,23 @@ class MyListController extends Controller
 {
     public function index(Request $request)
     {
-        $myListItems = Auth::check() ? Auth::user()->my_lists : [];
+        $user = Auth::user();
+        $keyword = $request->input('keyword');
+        $myListItems = $user->myListItems()
+            ->when(!empty($keyword), function ($query) use ($keyword) {
+                return $query->where('item_name', 'like', "%{$keyword}%");
+            })
+            ->with('category')
+            ->get();
 
-        return view("index", compact('myListItems'));
+        $myListErrorMessage = null;
+        if ($myListItems->isEmpty() && !empty($keyword)) {
+            $myListErrorMessage = '該当する商品が見つかりませんでした。';
+        }
+
+        $items = [];
+
+        return view("index", compact('myListItems', 'items' 'myListErrorMessage '));
     }
 
     public function toggle(Request $request)

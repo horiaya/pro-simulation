@@ -10,8 +10,6 @@ class Item extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
-
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -47,7 +45,7 @@ class Item extends Model
         return $this->hasMany(MyList::class);
     }
 
-    public function favorites()
+    public function myListedUsers()
     {
         return $this->belongsToMany(User::class, 'my_lists', 'item_id', 'user_id');
     }

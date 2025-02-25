@@ -16,7 +16,7 @@
                 </div>
                 <div class="item__count-list">
                     <i class="fa-regular fa-comment"></i>
-                    <small class="item__count-small">{{ $commentCount ?? 0 }}</small>
+                    <small id="comment-count-top" class="item__count-small">{{ $commentCount ?? 0 }}</small>
                 </div>
             </div>
             <form class="purchase-procedure__form" action="">
@@ -39,20 +39,29 @@
                 </p>
         </div>
         <div class="item__comment">
-            <h2 class="item__comment-heading">コメント({{ $commentCount ?? 0 }})</h2>
+            <h2 class="item__comment-heading">コメント(<span id="comment-count-bottom">{{ $commentCount ?? 0 }}</span>)</h2>
             @if ($item->comments->isNotEmpty())
-            <div class="item__comment-list">
-                @foreach ($item->comments as $comment)
-                    <p class="item__comment-profile"><img class="item__comment-profile-icon" id="preview" src="{{ asset('storage/' . auth()->user()->icon_path) }}" alt="プロフィール画像">{{ $comment->user->name }}</p>
+            <div id="comment-list" class="item__comment-list">
+                @foreach ($comments as $comment)
+                    <p class="item__comment-profile"><img class="item__comment-profile-icon" id="preview" src="{{ asset('storage/' . $comment->sender->icon_path) }}" alt="プロフィール画像">{{ $comment->user->name }}</p>
                     <p class="item__comment-list-txt">{{ $comment->comment }}</p>
                 @endforeach
             </div>
             @endif
-            <form class="item__comment-form" action="">
+            @auth
+            <form id="comment-form" class="item__comment-form" action="{{ route('comments.store') }}" method="post">
+            @csrf
                 <h3 class="item__comment-title">商品へのコメント</h3>
-                <textarea class="item__comment-txt" name="" id=""></textarea>
-                <button class="item__comment-btn">コメントを送信する</button>
+                @error('comment')
+                    <p class="error-message">{{$errors->first('comment')}}</p>
+                @enderror
+                <textarea class="item__comment-txt" name="comment" id="comment-content"></textarea>
+                <input type="hidden" name="item_id" value="{{ $item->id }}">
+                <button type="submit" class="item__comment-btn">コメントを送信する</button>
             </form>
+            @else
+                <p>コメントを投稿するには <a href="{{ route('login') }}" style="text-decoration:none; color:blue;">ログイン</a> してください。</p>
+            @endauth
         </div>
     </div>
 </div>
@@ -60,6 +69,11 @@
     document.addEventListener('DOMContentLoaded', function () {
         let starIcon = document.getElementById('star-icon');
         let myListCount = document.getElementById('mylist-count');
+        let commentForm = document.getElementById('comment-form');
+        let commentList = document.getElementById('comment-list');
+        let commentCountTop = document.getElementById('comment-count-top');
+        let commentCountBottom = document.getElementById('comment-count-bottom');
+
 
         starIcon.addEventListener('click', function () {
             let itemId = this.dataset.itemId;
@@ -90,6 +104,38 @@
             })
             .catch(error => console.error('Error:', error));
         });
+
+        if (commentForm) {
+            commentForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                let formData = new FormData();
+                formData.append('comment', document.getElementById('comment-content').value.trim());
+                formData.append('item_id', document.getElementById('comment-form').querySelector('input[name="item_id"]').value);
+
+                fetch("{{ route('comments.store') }}", {
+                    method: "POST",
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.comment) {
+                        let newComment = document.createElement('div');
+                        newComment.classList.add('comment');
+                        newComment.innerHTML = `
+                            <p>${data.comment.comment}</p>
+                        `;
+                        commentList.prepend(newComment);
+
+                        commentCountTop.textContent = data.comment_count;
+                        commentCountBottom.textContent = data.comment_count;
+
+                        commentForm.reset();
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        }
     });
 </script>
 @endsection

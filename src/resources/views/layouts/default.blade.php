@@ -84,7 +84,11 @@
             <div class="header__nav">
                 <form class="header-logout__form" action="{{ route('logout') }}" method="post">
                 @csrf
+                @auth
                     <button class="header-logout__btn" type="submit">ログアウト</button>
+                @else
+                    <a class="header-logout__btn" href="{{ route('login') }}">ログイン</a>
+                @endauth
                 </form>
                 <a class="header__nav-link" href="">マイページ</a>
                 <a class="header__nav-link" href="">出品</a>

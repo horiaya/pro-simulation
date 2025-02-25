@@ -66,7 +66,7 @@ class User extends Authenticatable
         return $this->hasMany(MyList::class);
     }
 
-    public function favorites()
+    public function myListItems()
     {
         return $this->belongsToMany(Item::class, 'my_lists', 'user_id', 'item_id');
     }

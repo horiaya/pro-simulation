@@ -18,10 +18,23 @@ class ItemController extends Controller
     {
         $keyword = $request->input('keyword');
 
-        $query = Item::search($keyword)
-                    ->get();
+        if (!Auth::check()) {
+            $items = Item::search($keyword)->get();
+            $myListItems = collect();
+        } else {
+            $items = Item::where('user_id', '!=', Auth::id())
+                        ->search($keyword)
+                        ->get();
 
-        $items = $query;
+            $myListItems = Auth::user()->myListItems()
+                        ->where(function ($query) use ($keyword) {
+                            if (!empty($keyword)) {
+                                $query->where('item_name', 'like', "%{$keyword}%");
+                            }
+                        })
+                        ->get();
+            //$myListItems = Auth::user()->myListItems()->get();
+        }
 
         $errorMessage = null;
         if ($items->isEmpty()) {
@@ -29,19 +42,19 @@ class ItemController extends Controller
         }
 
         return view('index', compact(
-            'items', 'keyword', 'errorMessage'));
+            'items', 'keyword', 'errorMessage', 'myListItems'));
     }
 
     public function show($id)
     {
-        $item = Item::with(['category', 'condition', 'categories', 'comments', 'user'])->findOrFail($id);
+        $item = Item::with(['category', 'condition', 'comments', 'user'])->findOrFail($id);
         $user = Auth::user();
 
         $myListCount = MyList::where('item_id', $id)->count();
         $isInMyList = $user ? MyList::where('user_id', $user->id)->where('item_id', $id)->exists() : false;
 
-        $commentCount = $item->comments()->count();
+        //$commentCount = $item->comments()->count();
 
-        return view('detail', compact('item', 'commentCount', 'myListCount', 'isInMyList'));
+        return view('detail', compact('item', 'myListCount', 'isInMyList'));
     }
 }

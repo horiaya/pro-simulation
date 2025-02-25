@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\CustomRegisterController;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MyListController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,10 +33,10 @@ Route::post('/logout', [CustomLoginController::class, 'logout'])->name('logout')
 
 Route::get('/', [ItemController::class, 'index'])->name('index');
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
+Route::get('/comments/{item}', [CommentController::class, 'index'])->name('comments.index');
 
 Route::middleware('auth')->group(function () {
-    //Route::get('/', [ItemController::class, 'index'])->name('index');
-    //Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
+    Route::get('/mylist', [MyListController::class, 'index'])->name('mylist.index');
     Route::post('/mylist/toggle', [MyListController::class, 'toggle'])->name('mylist.toggle');
-    //Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 });

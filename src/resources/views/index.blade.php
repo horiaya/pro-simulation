@@ -1,27 +1,30 @@
 @extends('layouts.default')
 
 @section('content')
-@if (!empty($errorMessage))
-    <div class="alert alert-search" style="text-align:center;">
-        {{ $errorMessage }}
-    </div>
-@endif
 <div class="item__list-tab">
     <button onclick="showTab('recommend')" id="recommendBtn" class="active">おすすめ</button>
     <button onclick="showTab('mylist')" id="mylistBtn">マイリスト</button>
 </div>
 <div id="recommendTab" class="item-group">
-    @foreach($items as $item)
-    <div class="item__list">
-        <a class="item__list-link" href="{{ route('item.detail', ['id' => $item->id]) }}">
-            <img class="item__list-img" src="{{ asset('storage/item_image/' . $item->item_image) }}" alt="商品画像">
-        </a>
-        <p class="item__list-name">{{ $item->item_name }}</p>
-    </div>
-    @endforeach
+    @if ($errorMessage)
+        <p class="item__alert-message">{{ $errorMessage }}</p>
+    @elseif ($items->isNotEmpty())
+        @foreach($items as $item)
+        <div class="item__list">
+            <a class="item__list-link" href="{{ route('item.detail', ['id' => $item->id]) }}">
+                <img class="item__list-img" src="{{ asset('storage/item_image/' . $item->item_image) }}" alt="商品画像">
+            </a>
+            <p class="item__list-name">{{ $item->item_name }}</p>
+        </div>
+        @endforeach
+    @endif
 </div>
 <div id="mylistTab" class="item-group" style="display: none;">
-    @if (!empty($myListItems) && count($myListItems) > 0)
+    @if ($myListItems->isEmpty() && !empty(request('keyword')))
+        <p class="item__alert-message">該当する商品が見つかりませんでした。</p>
+    @elseif ($myListItems->isEmpty())
+        <p class="item__alert-message">マイリストに登録された商品はありません。</p>
+    @else
         @foreach ($myListItems as $item)
             <div class="item__list">
                 <a class="item__list-link" href="{{ route('item.detail', ['id' => $item->id]) }}">
@@ -30,8 +33,6 @@
                 <p class="item__list-name">{{ $item->item_name }}</p>
             </div>
         @endforeach
-    @else
-        <p class="item__alert-message">マイリストに登録された商品はありません。</p>
     @endif
 </div>
 
@@ -46,5 +47,20 @@
         document.getElementById('mylistBtn').classList.remove('active');
         document.getElementById(tab + 'Btn').classList.add('active');
     }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        let myListItems = document.querySelectorAll('#mylistTab .item__list');
+        let savedTab = localStorage.getItem('selectedTab');
+
+        let urlParams = new URLSearchParams(window.location.search);
+        let tab = urlParams.get('tab');
+
+        if (tab === 'mylist') {
+            showTab('mylist');
+        } else {
+            showTab('recommend');
+        }
+    });
 </script>
 @endsection
