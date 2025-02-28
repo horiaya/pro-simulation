@@ -8,7 +8,11 @@
     <div class="item__content--right">
         <div class="top-item">
             <h1 class="top-item__name">{{ $item->item_name }}</h1>
-            <p class="top-item__price"><span class="top-item__price--small">¥</span>{{ number_format($item->price) }}<span class="top__item-price--small">(税込)</span></p>
+            <p class="top-item__price">
+                <span class="top-item__price--small">¥</span>
+                {{ number_format($item->price) }}
+                <span class="top__item-price--small">(税込)</span>
+            </p>
             <div class="item__count">
                 <div class="item__count-list">
                     <i id="star-icon" class="fa-{{ $isInMyList ? 'solid' : 'regular' }} fa-star" style="color: {{ $isInMyList ? '#fcc800' : '#484848' }};" data-item-id="{{ $item->id }}"></i>
@@ -39,29 +43,42 @@
                 </p>
         </div>
         <div class="item__comment">
-            <h2 class="item__comment-heading">コメント(<span id="comment-count-bottom">{{ $commentCount ?? 0 }}</span>)</h2>
-            @if ($item->comments->isNotEmpty())
+            <h2 class="item__comment-heading">コメント(
+                <span id="comment-count-bottom">{{ $commentCount ?? 0 }}</span>)
+            </h2>
+                @if (session('success'))
+                    <p class="success-message" style="color: green;">{{ session('success') }}</p>
+                @endif
             <div id="comment-list" class="item__comment-list">
-                @foreach ($comments as $comment)
-                    <p class="item__comment-profile"><img class="item__comment-profile-icon" id="preview" src="{{ asset('storage/' . $comment->sender->icon_path) }}" alt="プロフィール画像">{{ $comment->user->name }}</p>
-                    <p class="item__comment-list-txt">{{ $comment->comment }}</p>
+                @foreach ($comments ?? [] as $comment)
+                <div class="comment-item">
+                    <div class="comment-header">
+                        @if($comment->sender->icon_path)
+                            <img class="comment-icon" src="{{ asset('storage/' . $comment->sender->icon_path) }}" alt="プロフィール画像">
+                        @else
+                            <div class="comment-placeholder"></div>
+                        @endif
+                            <span class="comment-user">{{ $comment->sender->name }}</span>
+                    </div>
+                    <p class="comment-text">{{ $comment->comment }}</p>
+                    <small class="comment-time">{{ $comment->created_at->format('Y-m-d H:i') }}</small>
+                </div>
                 @endforeach
             </div>
-            @endif
             @auth
             <form id="comment-form" class="item__comment-form" action="{{ route('comments.store') }}" method="post">
             @csrf
                 <h3 class="item__comment-title">商品へのコメント</h3>
-                @error('comment')
-                    <p class="error-message">{{$errors->first('comment')}}</p>
-                @enderror
-                <textarea class="item__comment-txt" name="comment" id="comment-content"></textarea>
+                    @if ($errors->has('comment'))
+                        <p class="error-message" style="color: red;">{{ $errors->first('comment') }}</p>
+                    @endif
+                <textarea class="item__comment-txt" name="comment" id="comment-content"></textarea required>
                 <input type="hidden" name="item_id" value="{{ $item->id }}">
                 <button type="submit" class="item__comment-btn">コメントを送信する</button>
             </form>
-            @else
-                <p>コメントを投稿するには <a href="{{ route('login') }}" style="text-decoration:none; color:blue;">ログイン</a> してください。</p>
-            @endauth
+                @else
+                    <p>コメントを投稿するには <a href="{{ route('login') }}" style="text-decoration:none; color:blue;">ログイン</a> してください。</p>
+                @endauth
         </div>
     </div>
 </div>
@@ -69,10 +86,10 @@
     document.addEventListener('DOMContentLoaded', function () {
         let starIcon = document.getElementById('star-icon');
         let myListCount = document.getElementById('mylist-count');
-        let commentForm = document.getElementById('comment-form');
         let commentList = document.getElementById('comment-list');
         let commentCountTop = document.getElementById('comment-count-top');
         let commentCountBottom = document.getElementById('comment-count-bottom');
+        let itemId = document.querySelector('input[name="item_id"]').value;
 
 
         starIcon.addEventListener('click', function () {
@@ -105,37 +122,38 @@
             .catch(error => console.error('Error:', error));
         });
 
-        if (commentForm) {
-            commentForm.addEventListener('submit', function (e) {
-                e.preventDefault();
 
-                let formData = new FormData();
-                formData.append('comment', document.getElementById('comment-content').value.trim());
-                formData.append('item_id', document.getElementById('comment-form').querySelector('input[name="item_id"]').value);
-
-                fetch("{{ route('comments.store') }}", {
-                    method: "POST",
-                    body: formData,
-                })
+        function fetchComments() {
+            fetch(/comments/${itemId})
                 .then(response => response.json())
                 .then(data => {
-                    if (data.comment) {
+                    commentList.innerHTML = "";
+
+                    data.comments.forEach(comment => {
+                        let userIcon = comment.sender.icon_path
+                            ? `<img class="comment-icon" src="/storage/${comment.sender.icon_path}" alt="プロフィール画像">`
+                            : `<div class="comment-placeholder"></div>`;
+
                         let newComment = document.createElement('div');
-                        newComment.classList.add('comment');
+                        newComment.classList.add('comment-item');
                         newComment.innerHTML = `
-                            <p>${data.comment.comment}</p>
+                            <div class="comment-header">
+                                ${userIcon}
+                                <span class="comment-user">${comment.sender.name}</span>
+                            </div>
+                            <p class="comment-text">${comment.comment}</p>
+                            <small class="comment-time">${comment.created_at}</small>
                         `;
-                        commentList.prepend(newComment);
+                        commentList.appendChild(newComment);
+                    });
 
-                        commentCountTop.textContent = data.comment_count;
-                        commentCountBottom.textContent = data.comment_count;
-
-                        commentForm.reset();
-                    }
+                    commentCountTop.textContent = data.comment_count;
+                    commentCountBottom.textContent = data.comment_count;
                 })
                 .catch(error => console.error('Error:', error));
-            });
         }
+
+        setInterval(fetchComments, 10000);
     });
 </script>
 @endsection

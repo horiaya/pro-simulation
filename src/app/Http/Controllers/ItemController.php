@@ -33,7 +33,6 @@ class ItemController extends Controller
                             }
                         })
                         ->get();
-            //$myListItems = Auth::user()->myListItems()->get();
         }
 
         $errorMessage = null;
@@ -53,8 +52,9 @@ class ItemController extends Controller
         $myListCount = MyList::where('item_id', $id)->count();
         $isInMyList = $user ? MyList::where('user_id', $user->id)->where('item_id', $id)->exists() : false;
 
-        //$commentCount = $item->comments()->count();
+        $comments = $item->comments;
+        $commentCount = $item->comments()->count();
 
-        return view('detail', compact('item', 'myListCount', 'isInMyList'));
+        return view('detail', compact('item', 'myListCount', 'isInMyList', 'comments', 'commentCount'));
     }
 }

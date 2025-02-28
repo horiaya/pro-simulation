@@ -10,9 +10,12 @@ use App\Http\Requests\CommentRequest;
 
 class CommentController extends Controller
 {
-    public function index(Item $item)
+    public function index($itemId)
     {
-        $comments = Comment::where('item_id', $item->id)->with('sender')->latest()->get();
+        $comments = Comment::where('item_id', $itemId)
+            ->with('sender:id, name, icon_path')
+            ->latest()
+            ->get();
 
         return response()->json([
             'comments' => $comments,
@@ -30,14 +33,6 @@ class CommentController extends Controller
             'comment' => $request->input('comment'),
         ]);
 
-        return response()->json([
-            'comment' => [
-                'comment' => $comment->comment,
-                'name' => $user->name,
-                'icon_path' => $user->icon_path ?? 'default.png',
-                'created_at' => $comment->created_at->format('Y-m-d H:i'),
-            ],
-            'comment_count' => Comment::where('item_id', $request->input('item_id'))->count(),
-        ]);
+        return redirect()->back()->with('success', 'コメントが投稿されました');
     }
 }
