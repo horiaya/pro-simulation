@@ -91,7 +91,6 @@
         let commentCountBottom = document.getElementById('comment-count-bottom');
         let itemId = document.querySelector('input[name="item_id"]').value;
 
-
         starIcon.addEventListener('click', function () {
             let itemId = this.dataset.itemId;
 
@@ -124,7 +123,7 @@
 
 
         function fetchComments() {
-            fetch(/comments/${itemId})
+            fetch(`/comments/${itemId}`)
                 .then(response => response.json())
                 .then(data => {
                     commentList.innerHTML = "";

@@ -1,0 +1,45 @@
+
+.mypage__head {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+.mypage__profile-link {
+    text-decoration: none;
+    color: #ff5151;
+    border: 1px solid #ff5151;
+    border-radius: 3px;
+    padding: 5px;
+    display: inline-block;
+    margin-left: 200px;
+}
+.mypage__placeholder, .mypage__icon{
+    background-color: #ccc;
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 250px;
+}
+.mypage__user-name {
+    margin: 0 100px;
+}
+
+.item__list-tab {
+    margin-top: 35px;
+}
+.sell-item, .purchase-item {
+    text-align: center;
+}
+#sellBtn, #purchaseBtn {
+    border: none;
+    background-color: white;
+    font-size: 20px;
+    margin-left: 70px;
+    color: gray;
+}
+#sellBtn.active,
+#purchaseBtn.active {
+    color: #ff5151;
+}

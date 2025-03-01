@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MyListController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\MyPageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,4 +40,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/mylist', [MyListController::class, 'index'])->name('mylist.index');
     Route::post('/mylist/toggle', [MyListController::class, 'toggle'])->name('mylist.toggle');
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('/mypage', [MyPageController::class, 'index'])->name('mypage.index');
 });

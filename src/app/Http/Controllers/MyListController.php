@@ -29,7 +29,7 @@ class MyListController extends Controller
 
         $items = [];
 
-        return view("index", compact('myListItems', 'items' 'myListErrorMessage '));
+        return view('index', compact('myListItems', 'items', 'myListErrorMessage '));
     }
 
     public function toggle(Request $request)

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/index.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/detail.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/mypage.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <title>coachtech</title>
 </head>
@@ -90,7 +91,7 @@
                     <a class="header-logout__btn" href="{{ route('login') }}">ログイン</a>
                 @endauth
                 </form>
-                <a class="header__nav-link" href="">マイページ</a>
+                <a class="header__nav-link" href="{{ route('mypage.index') }}">マイページ</a>
                 <a class="header__nav-link" href="">出品</a>
             </div>
         </div>

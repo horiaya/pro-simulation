@@ -140,6 +140,7 @@
     background-color: #ccc;
     border-radius: 50%;
     display: inline-block;
+    object-fit: cover;
 }
 .comment-icon {
     width: 40px;

@@ -46,13 +46,15 @@
         document.getElementById('recommendBtn').classList.remove('active');
         document.getElementById('mylistBtn').classList.remove('active');
         document.getElementById(tab + 'Btn').classList.add('active');
+
+        if (tab === 'mylist') {
+            history.pushState(null, '', '/?tab=mylist');
+        } else {
+            history.pushState(null, '', '/');
+        }
     }
 
-
-    document.addEventListener('DOMContentLoaded', function() {
-        let myListItems = document.querySelectorAll('#mylistTab .item__list');
-        let savedTab = localStorage.getItem('selectedTab');
-
+    window.onload = function() {
         let urlParams = new URLSearchParams(window.location.search);
         let tab = urlParams.get('tab');
 
@@ -61,6 +63,6 @@
         } else {
             showTab('recommend');
         }
-    });
+    };
 </script>
 @endsection
