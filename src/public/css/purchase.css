@@ -1,0 +1,85 @@
+.purchase-content {
+    display: flex;
+    justify-content: center;
+}
+.purchase-content--left {
+    width: 65%;
+    box-sizing: border-box;
+    padding: 20px;
+}
+.purchase-content--right{
+    width: 35%;
+    box-sizing: border-box;
+    padding: 40px;
+}
+
+.purchase__item {
+    display: flex;
+    padding-bottom: 30px;
+    border-bottom: 1px solid gray;
+}
+.purchase__item-img {
+    width: 150px;
+    height: 150px;
+}
+.purchase__item--right {
+    margin-left: 40px;
+}
+.purchase__item-name {
+    font-size: 25px;
+    margin: 0 0 10px 0;
+}
+.purchase__item-price {
+    font-size: 20px;
+    margin: 0;
+}
+
+.payment-method, .shipping-address {
+    padding: 0 20px 30px 20px;
+    border-bottom: 1px solid gray;
+}
+.payment-method__select {
+    width: 200px;
+    padding: 3px;
+}
+.payment-method__select, .shipping-empty, .shipping-content {
+    margin-left: 50px;
+}
+
+.shipping-address__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.shipping__link {
+    text-decoration: none;
+    color: #3293f3;
+    display: inline-block;
+}
+
+
+.subtotal__list, tr {
+    border: 1px solid gray;
+    width: 100%;
+}
+.subtotal__list th,
+.subtotal__list td {
+    padding: 30px 20px;
+}
+.subtotal__txt {
+    font-weight: 100;
+}
+.subtotal__display {
+    font-size: 20px;
+}
+.purchase__form-btn {
+    display: block;
+    width: 100%;
+    background-color: #ff5151;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 3px;
+    font-size: 15px;
+    margin-top: 40px;
+}

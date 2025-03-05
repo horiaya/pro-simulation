@@ -23,7 +23,7 @@
                     <small id="comment-count-top" class="item__count-small">{{ $commentCount ?? 0 }}</small>
                 </div>
             </div>
-            <form class="purchase-procedure__form" action="">
+            <form class="purchase-procedure__form" action="{{ route('purchase.show', ['itemId' => $item->id]) }}">
                 <button class="purchase-procedure__btn">購入手続きへ</button>
             </form>
         </div>

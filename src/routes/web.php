@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MyListController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MyPageController;
+use App\Http\Controllers\PurchaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,7 @@ use App\Http\Controllers\MyPageController;
 
 
 
-Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 Route::get('/verify-email', function () {
     return view('auth.verify-email');
 })->name('verify-email');
@@ -34,11 +35,14 @@ Route::post('/logout', [CustomLoginController::class, 'logout'])->name('logout')
 
 Route::get('/', [ItemController::class, 'index'])->name('index');
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
-Route::get('/comments/{item}', [CommentController::class, 'index'])->name('comments.index');
+Route::get('/comments/:{item}', [CommentController::class, 'index'])->name('comments.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/mylist', [MyListController::class, 'index'])->name('mylist.index');
     Route::post('/mylist/toggle', [MyListController::class, 'toggle'])->name('mylist.toggle');
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::get('/mypage', [MyPageController::class, 'index'])->name('mypage.index');
+    Route::get('/purchase/{itemId}', [PurchaseController::class, 'show'])->name('purchase.show');
+    Route::get('/purchase/address/{itemId}', [PurchaseController::class, 'indexAddress'])->name('address.indexAddress');
+    Route::post('/address/update/{itemId}', [PurchaseController::class, 'updateAddress'])->name('purchase.updateAddress');
 });

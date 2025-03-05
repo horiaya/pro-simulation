@@ -1,0 +1,31 @@
+.shipping-address__update {
+    width: 100%;
+}
+.shipping-address__heading {
+    text-align: center;
+}
+.shipping-address__list {
+    width: 600px;
+    margin: 0 auto;
+}
+.shipping-address__input {
+    width: 600px;
+    border-radius: 3px;
+    padding: 7px;
+    font-size: 18px;
+}
+.shipping-address__title {
+    margin: 40px 0 3px 0;
+}
+
+.shipping-address__update-btn {
+    background-color: #ff5151;
+    width: 600px;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 8px;
+    text-align: center;
+    margin: 60px 0;
+    font-size: 18px;
+}
