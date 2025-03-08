@@ -56,6 +56,15 @@
 }
 
 
+.profile-group {
+    margin-bottom: 40px;
+}
+.profile__item {
+    width: 600px;
+}
+.profile__item-input, .profile__form-btn {
+    width: 100%;
+}
 .profile__icon,
 .profile-placeholder {
     width: 100px;
@@ -63,15 +72,12 @@
     border-radius: 50%;
     object-fit: cover;
 }
-
 .profile-placeholder {
     background-color: #ddd;
 }
-
 .profile__icon, .profile-placeholder, .profile__icon-select, .profile__select-btn {
     display: inline-block;
 }
-
 .profile__select-btn {
     color: #ff5151;
     border: 1px solid #ff5151;
@@ -79,7 +85,6 @@
     margin-left: 30px;
     padding: 5px;
 }
-
 .profile-icon-content {
     display: flex;
     align-items: center;

@@ -17,12 +17,15 @@
         </div>
         <div class="payment-method">
             <h4 class="payment-method__title">支払い方法</h4>
-            <select class="payment-method__select" name="" id="payment-method">
-                <option value="" selected disabled>選択してください</option>
-                @foreach($paymentMethods as $method)
-                    <option value="{{ $method->id }}">{{ $method->payment }}</option>
-                @endforeach
-            </select>
+            <form action="{{ route('purchase.updatePaymentMethod', ['itemId' => $item->id, 'keep' => true]) }}" method="POST">
+            @csrf
+                <select class="payment-method__select" name="payment" id="payment-method">
+                    <option value="" disabled {{ empty($selectedPaymentMethod) ? 'selected' : '' }}>選択してください</option>
+                    @foreach($paymentMethods as $method)
+                        <option value="{{ $method->id }}" {{ (string)$selectedPaymentMethod === (string)$method->id ? 'selected' : '' }}>{{ $method->payment }}</option>
+                    @endforeach
+                </select>
+            </form>
         </div>
         <div class="shipping-address">
             <div class="shipping-address__head">
@@ -62,7 +65,9 @@
                 </tr>
                 <tr>
                     <th class="subtotal__txt">支払い方法</th>
-                    <td id="selected-payment" class="subtotal__display">未選択</td>
+                    <td id="selected-payment" class="subtotal__display">
+                        {{ $selectedPaymentMethod ? \App\Models\Payment::find($selectedPaymentMethod)->payment : '未選択' }}
+                    </td>
                 </tr>
             </table>
         </div>
@@ -73,15 +78,24 @@
     </div>
 </div>
 <script>
-    document.getElementById('payment-method').addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
+    document.addEventListener('DOMContentLoaded', () => {
+        const paymentSelect = document.getElementById('payment-method');
         const displayElement = document.getElementById('selected-payment');
 
-        if (this.value === "") {
-            displayElement.textContent = "未選択";
-        } else {
-            displayElement.textContent = selectedOption.textContent;
-        }
+        const selectedOption = paymentSelect.options[paymentSelect.selectedIndex];
+        displayElement.textContent = selectedOption.value ? selectedOption.textContent : "未選択";
+
+        paymentSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+
+            if (this.value === "") {
+                displayElement.textContent = "未選択";
+            } else {
+                displayElement.textContent = selectedOption.textContent;
+            }
+
+            this.form.submit();
+        });
     });
 </script>
 @endsection

@@ -10,7 +10,7 @@
             @endif
             <h2 class="mypage__user-name">{{ $user->name }}</h2>
             <div class="mypage__profile">
-                <a class="mypage__profile-link" href="/profile">プロフィールを編集</a>
+                <a class="mypage__profile-link" href="{{ route('profile.edit') }}">プロフィールを編集</a>
             </div>
         </div>
         <div class="item__list-tab">

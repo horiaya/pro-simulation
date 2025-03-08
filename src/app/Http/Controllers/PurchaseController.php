@@ -22,13 +22,38 @@ class PurchaseController extends Controller
 
         $paymentMethods = Payment::all();
 
-        $shippingAddress = Session()->get('shipping_address', [
+        $shippingAddress = session()->get('shipping_address', [
             'post_code' => $user->post_code ?? '',
             'address' => $user->address ?? '',
             'building_name' => $user->building_name ?? '',
         ]);
 
-        return view('purchase', compact('item', 'paymentMethods', 'shippingAddress', 'user'));
+        $selectedPaymentMethod = Session::get('selected_payment_method_{$itemId}', '');
+
+        $keepPaymentMethod = session()->pull('keep_payment_method', false);
+
+        if (!$keepPaymentMethod) {
+            foreach (session()->all() as $key => $value) {
+                if (str_starts_with($key, 'selected_payment_method_') && $key !== "selected_payment_method_{$itemId}") {
+                    session()->forget($key);
+                }
+            }
+        }
+
+        return view('purchase', compact('item', 'paymentMethods', 'shippingAddress', 'user', 'selectedPaymentMethod'));
+    }
+
+    public function updatePaymentMethod(Request $request, $itemId)
+    {
+        $request->validate([
+            'payment' => 'required|exists:payments,id',
+        ]);
+
+        session(['selected_payment_method_{$itemId}' => $request->payment]);
+
+        session()->put('keep_payment_method', true);
+
+        return redirect()->route('purchase.show', ['itemId' => $itemId, 'keep' => true]);
     }
 
     public function indexAddress($itemId)
@@ -51,6 +76,8 @@ class PurchaseController extends Controller
             'address' => $request->address,
             'building_name' => $request->building_name ?? '',
         ]);
+
+        session()->put('keep_payment_method', true);
 
         return redirect()->route('purchase.show', ['itemId' => $itemId])
                         ->with('success', '住所が更新されました。');

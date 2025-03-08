@@ -25,8 +25,8 @@ class CustomRegisterController extends Controller
 
         //$user->sendEmailVerificationNotification();
 
-        Auth::logout();
+        Auth::login($user);
 
-        return redirect()->route('verify-email');
+        return redirect()->route('profile.create');
     }
 }

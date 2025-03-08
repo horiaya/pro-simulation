@@ -49,6 +49,12 @@ class ItemController extends Controller
         $item = Item::with(['category', 'condition', 'comments', 'user'])->findOrFail($id);
         $user = Auth::user();
 
+        foreach (session()->all() as $key => $value) {
+            if (str_starts_with($key, 'selected_payment_method_')) {
+                session()->forget($key);
+            }
+        }
+
         $myListCount = MyList::where('item_id', $id)->count();
         $isInMyList = $user ? MyList::where('user_id', $user->id)->where('item_id', $id)->exists() : false;
 

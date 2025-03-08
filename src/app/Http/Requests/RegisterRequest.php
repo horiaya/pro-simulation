@@ -27,10 +27,6 @@ class RegisterRequest extends FormRequest
             'name' => 'required|string|max:100',
             'email' => 'required|string|email|max:100|unique:users,email,' . $this->user,
             'password' => 'required|string|min:8|max:100|confirmed',
-            'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'post_code' => 'nullable|string|regex:/^\d{3}-\d{4}$/',
-            'address' => 'nullable|string|max:100',
-            'building_name' => 'nullable|string|max:100',
         ];
     }
 
@@ -38,15 +34,13 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name.required' => 'お名前を入力してください',
+            'name.max' => '名前は１００文字以内で設定してください',
             'email.required' => 'メールアドレスを入力してください',
             'email.unique' => '登録できませんでした',
             'password.required' => 'パスワードを入力してください',
             'password.min' => 'パスワードは８文字以上で入力してください',
             'password.max' => 'パスワードは１００文字以内で入力してください',
-            'password.confirmed' => 'パスワードと一致しません',
-            'post_code.regex' => '郵便番号は「123-4567」の形式で入力してください',
-            'post_code.required' => '郵便番号を入力してください',
-            'address.required' => '住所を入力してください',
+            'password.confirmed' => 'パスワードが一致しません',
         ];
     }
 }
