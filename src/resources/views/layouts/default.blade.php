@@ -94,7 +94,7 @@
                 @endauth
                 </form>
                 <a class="header__nav-link" href="{{ route('mypage.index') }}">マイページ</a>
-                <a class="header__nav-link" href="">出品</a>
+                <a class="header__nav-link" href="{{ route('sell.create') }}">出品</a>
             </div>
         </div>
     </header>

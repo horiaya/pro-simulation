@@ -1,18 +1,23 @@
+
 .item-group {
-    text-align: center;
+    margin: 0 auto;
+    max-width: calc(250px * 4 + 50px * 3);
+    gap: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 .item__list {
-    margin: 15px;
-    display: inline-block;
-    text-align: start;
+    max-width: 250px;
+    box-sizing: border-box;
 }
 .item__list-img {
-    height: 260px;
-    width: 260px;
+    height: 250px;
+    width: 250px;
+    box-sizing: border-box;
 }
 .item__list-name {
     font-size: 15px;
-    margin: 5px;
 }
 
 #recommendBtn, #mylistBtn {
@@ -40,9 +45,14 @@
     .item__list-img {
         height: 150px;
         width: 150px;
+        box-sizing: border-box;
     }
     .item__list-name {
         font-size: 10px;
         margin: 5px;
+    }
+    .item-group {
+        max-width: calc(150px * 3 + 40px * 2);
+        gap: 40px;
     }
 }

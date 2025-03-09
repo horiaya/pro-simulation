@@ -26,12 +26,12 @@
         <p class="item__alert-message">マイリストに登録された商品はありません。</p>
     @else
         @foreach ($myListItems as $item)
-            <div class="item__list">
-                <a class="item__list-link" href="{{ route('item.detail', ['id' => $item->id]) }}">
-                    <img class="item__list-img" src="{{ asset('storage/item_image/' . $item->item_image) }}" alt="商品画像">
-                </a>
-                <p class="item__list-name">{{ $item->item_name }}</p>
-            </div>
+        <div class="item__list">
+            <a class="item__list-link" href="{{ route('item.detail', ['id' => $item->id]) }}">
+                <img class="item__list-img" src="{{ asset('storage/item_image/' . $item->item_image) }}" alt="商品画像">
+            </a>
+            <p class="item__list-name">{{ $item->item_name }}</p>
+        </div>
         @endforeach
     @endif
 </div>
@@ -41,7 +41,7 @@
         document.getElementById('recommendTab').style.display = 'none';
         document.getElementById('mylistTab').style.display = 'none';
 
-        document.getElementById(tab + 'Tab').style.display = 'block';
+        document.getElementById(tab + 'Tab').style.display = 'flex';
 
         document.getElementById('recommendBtn').classList.remove('active');
         document.getElementById('mylistBtn').classList.remove('active');

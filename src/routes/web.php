@@ -9,6 +9,7 @@ use App\Http\Controllers\MyListController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MyPageController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\SellController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/mylist/toggle', [MyListController::class, 'toggle'])->name('mylist.toggle');
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::get('/mypage', [MyPageController::class, 'index'])->name('mypage.index');
+    Route::get('/sell', [SellController::class, 'create'])->name('sell.create');
     Route::get('/purchase/{itemId}', [PurchaseController::class, 'show'])->name('purchase.show');
     Route::post('/purchase/{itemId}/update-payment-method', [PurchaseController::class, 'updatePaymentMethod'])->name('purchase.updatePaymentMethod');
     Route::get('/purchase/address/{itemId}', [PurchaseController::class, 'indexAddress'])->name('address.indexAddress');

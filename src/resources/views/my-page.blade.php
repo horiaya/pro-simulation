@@ -17,7 +17,7 @@
             <button onclick="showTab('sell')" id="sellBtn" class="active">出品した商品</button>
             <button onclick="showTab('purchase')" id="purchaseBtn">購入した商品</button>
         </div>
-        <div id="sellTab" class="sell-item">
+        <div id="sellTab" class="sell-item item-group">
         @if($items->isEmpty())
             <p class="sell-empty-message">出品した商品はありません。</p>
         @else
@@ -31,7 +31,7 @@
             @endforeach
         @endif
         </div>
-        <div id="purchaseTab" class="purchase-item">
+        <div id="purchaseTab" class="purchase-item item-group">
         @if($purchases->isEmpty())
             <p class="purchase-empty-message">購入した商品はありません。</p>
         @else
@@ -56,7 +56,7 @@
         document.getElementById('sellTab').style.display = 'none';
         document.getElementById('purchaseTab').style.display = 'none';
 
-        document.getElementById(tab + 'Tab').style.display = 'block';
+        document.getElementById(tab + 'Tab').style.display = 'flex';
 
         document.getElementById('sellBtn').classList.remove('active');
         document.getElementById('purchaseBtn').classList.remove('active');

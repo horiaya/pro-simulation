@@ -29,9 +29,7 @@
 .item__list-tab {
     margin-top: 35px;
 }
-.sell-item, .purchase-item {
-    text-align: center;
-}
+
 #sellBtn, #purchaseBtn {
     border: none;
     background-color: white;
