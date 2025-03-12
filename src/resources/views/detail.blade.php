@@ -8,6 +8,7 @@
     <div class="item__content--right">
         <div class="top-item">
             <h1 class="top-item__name">{{ $item->item_name }}</h1>
+            <p class="top-item__brand">{{ $item->item_brand }}</p>
             <p class="top-item__price">
                 <span class="top-item__price--small">¥</span>
                 {{ number_format($item->price) }}

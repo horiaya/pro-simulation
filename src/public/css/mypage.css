@@ -41,3 +41,20 @@
 #purchaseBtn.active {
     color: #ff5151;
 }
+
+@media screen and (max-width: 850px){
+    .mypage__profile-link {
+        margin-left: 50px;
+    }
+    .mypage__placeholder,
+    .mypage__icon {
+        background-color: #ccc;
+        width: 80px;
+        height: 80px;
+        margin-left: 100px;
+    }
+    .mypage__user-name {
+        margin: 0 30px;
+    }
+}
+

@@ -50,9 +50,14 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/mylist', [MyListController::class, 'index'])->name('mylist.index');
     Route::post('/mylist/toggle', [MyListController::class, 'toggle'])->name('mylist.toggle');
+
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+
     Route::get('/mypage', [MyPageController::class, 'index'])->name('mypage.index');
+
     Route::get('/sell', [SellController::class, 'create'])->name('sell.create');
+    Route::post('/sell', [SellController::class, 'store'])->name('sell.store');
+
     Route::get('/purchase/{itemId}', [PurchaseController::class, 'show'])->name('purchase.show');
     Route::post('/purchase/{itemId}/update-payment-method', [PurchaseController::class, 'updatePaymentMethod'])->name('purchase.updatePaymentMethod');
     Route::get('/purchase/address/{itemId}', [PurchaseController::class, 'indexAddress'])->name('address.indexAddress');

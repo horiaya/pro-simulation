@@ -2,6 +2,11 @@
 
 @section('content')
     <div class="mypage-content">
+        @if (session('message'))
+            <div class="alert alert-success" style="color:green;">
+                {{ session('message') }}
+            </div>
+        @endif
         <div class="mypage__head">
             @if($user->icon_path)
                 <img class="mypage__icon" src="{{ asset('storage/' . $user->icon_path) }}" alt="プロフィール画像">

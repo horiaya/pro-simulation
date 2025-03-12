@@ -83,3 +83,15 @@
     font-size: 15px;
     margin-top: 40px;
 }
+
+@media screen and (max-width: 850px){
+    .purchase-content--left {
+        width: 60%;
+        padding: 10px;
+    }
+
+    .purchase-content--right {
+        width: 40%;
+        padding: 20px;
+    }
+}

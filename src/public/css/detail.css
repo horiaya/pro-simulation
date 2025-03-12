@@ -148,3 +148,14 @@
     border-radius: 50%;
     object-fit: cover;
 }
+
+@media screen and (max-width: 850px){
+    .detail__item-img {
+        width: 250px;
+        height: 250px;
+    }
+
+    .item__content--right {
+        padding: 0 50px 0 0;
+    }
+}
