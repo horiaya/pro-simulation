@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class CustomLoginController extends Controller
 {
@@ -31,6 +32,17 @@ class CustomLoginController extends Controller
 
     public function logout(Request $request)
     {
+        $user = Auth::user();
+
+        //不要な出品商品画像があれば削除
+        $imageTemp = session('image_temp');
+        if ($imageTemp) {
+            $tempPath = "public/temp/{$imageTemp}";
+            if (Storage::exists($tempPath)) {
+                Storage::delete($tempPath);
+            }
+        }
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

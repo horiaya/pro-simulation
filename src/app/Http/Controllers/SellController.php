@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Http\Requests\ExhibitionRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 
 class SellController extends Controller
@@ -22,16 +23,45 @@ class SellController extends Controller
         return view('sell', compact('categories' ,'conditions'));
     }
 
+    public function uploadTempImage(Request $request)
+    {
+        if ($request->hasFile('item_image')) {
+            $file = $request->file('item_image');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+
+            $path = $file->storeAs('public/temp', $filename);
+
+        if ($request->has('old_image_temp')) {
+            $oldTempPath = "public/temp/" . $request->input('old_image_temp');
+            if (Storage::exists($oldTempPath)) {
+                Storage::delete($oldTempPath);
+            }
+        }
+
+            session(['image_temp' => $filename]);
+
+            return response()->json(['filename' => $filename]);
+        }
+
+        return response()->json(['message' => '画像のアップロードに失敗しました'], 400);
+    }
+
     public function store(ExhibitionRequest $request)
     {
-        //dd($request->all());
         $user = Auth::user();
+        $imageTemp = $request->input('image_temp');
 
-        $imagePath = null;
-        if ($request->hasFile('item_image')) {
-            $imagePath = $request->file('item_image')->store('public/item_image');
-            //session(['image_temp' => str_replace('public/', 'storage/', $imagePath)]);
-            $filename = basename($imagePath);
+        if ($imageTemp) {
+            $tempPath = "public/temp/{$imageTemp}";
+            $newPath = "public/item_image/{$imageTemp}";
+
+            if (Storage::exists($tempPath)) {
+                Storage::move($tempPath, $newPath);
+            }
+
+            $imagePath = $imageTemp;
+        } else {
+            $imagePath = null;
         }
 
         $item = new Item();
@@ -41,7 +71,7 @@ class SellController extends Controller
         $item->description = $request->input('description');
         $item->condition_id = $request->input('condition');
         $item->price = $request->input('price');
-        $item->item_image = $filename;
+        $item->item_image = $imagePath;
         $item->save();
 
         if ($request->has('category') && is_array($request->input('category'))) {

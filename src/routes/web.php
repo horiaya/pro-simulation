@@ -37,10 +37,9 @@ Route::post('/logout', [CustomLoginController::class, 'logout'])->name('logout')
 Route::get('/', [ItemController::class, 'index'])->name('index');
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
 Route::get('/comments/:{item}', [CommentController::class, 'index'])->name('comments.index');
-
-/*Route::middleware(['auth', 'profile.completed'])->group(function () {
-    Route::get('/', [ItemController::class, 'index'])->name('index');
-});*/
+Route::post('/upload-temp-image', [SellController::class, 'uploadTempImage'])
+        ->name('upload.temp.image')
+        ->middleware('api');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'create'])->name('profile.create');

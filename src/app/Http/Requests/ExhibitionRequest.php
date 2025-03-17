@@ -26,7 +26,12 @@ class ExhibitionRequest extends FormRequest
         return [
             'item_name' => 'required|string|max:100',
             'description' => 'required|string|max:255',
-            'item_image' => 'required|image|mimes:jpeg,png|max:2048',
+            'item_image' => [
+                'required_without:image_temp',
+                'image',
+                'mimes:jpeg,png,jpg',
+                'max:2048'
+            ],
             'category' => 'required|array',
             'category.*' => 'exists:categories,id',
             'condition' => 'required|exists:conditions,id',
@@ -42,7 +47,7 @@ class ExhibitionRequest extends FormRequest
             'item_name.max' => '文字数の上限を超えています',
             'description.required' => '商品説明を入力してください',
             'description.max' => '文字数の上限を超えています',
-            'item_image.required' => '商品画像を選択してください。',
+            'item_image.required_without' => '商品画像を選択してください',
             'item_image.image' => 'アップロードされたファイルは画像形式でなければなりません',
             'item_image.mimes' => '画像形式はJPEGまたはPNGのみ対応しています',
             'category.required' => '選択必須です',
