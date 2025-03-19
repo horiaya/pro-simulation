@@ -12,6 +12,7 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Http\Controllers\Controller;
 
 
+
 class CustomRegisterController extends Controller
 {
     public function create()
@@ -23,10 +24,10 @@ class CustomRegisterController extends Controller
     {
         $user = $creator->create($request->validated());
 
-        //$user->sendEmailVerificationNotification();
+        $user->sendEmailVerificationNotification();
 
-        Auth::login($user);
+        session(['unverified_email' => $user->email]);
 
-        return redirect()->route('profile.create');
+        return redirect()->route('verify-email');
     }
 }

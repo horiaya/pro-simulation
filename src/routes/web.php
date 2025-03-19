@@ -10,6 +10,12 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MyPageController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SellController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,9 +31,42 @@ use App\Http\Controllers\SellController;
 
 
 
-Route::get('/verify-email', function () {
-    return view('auth.verify-email');
-})->name('verify-email');
+Route::get('/verify-email', function () {return view('auth.verify-email');})->name('verify-email');
+Route::get('/email/verify/{id}/{hash}', function ($id, $hash) {
+    $user = User::find($id);
+
+    if (!$user || !hash_equals(sha1($user->getEmailForVerification()), $hash)) {
+        abort(403, 'この認証リンクは無効です。');
+    }
+    if ($user->hasVerifiedEmail()) {
+        Auth::login($user);
+        return redirect('/profile')->with('message', 'すでにメール認証が完了しています。');
+    }
+
+    $user->markEmailAsVerified();
+
+    Auth::login($user);
+
+    return redirect('/profile')->with('message', 'メール認証が完了しました！');
+})->middleware(['signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $email = session('unverified_email');
+
+    if (!$email) {
+        return back()->with('message', '認証メールを再送信できません。もう一度登録してください。');
+    }
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user || $user->hasVerifiedEmail()) {
+        return back()->with('message', 'このメールアドレスはすでに認証されています。');
+    }
+
+    $user->sendEmailVerificationNotification();
+
+    return back()->with('message', '認証リンクを再送信しました！');
+})->middleware(['throttle:6,1'])->name('verification.send');
+
 Route::get('/register', [CustomRegisterController::class, 'create'])->name('register');
 Route::post('/register', [CustomRegisterController::class, 'store']);
 Route::get('/login', [CustomLoginController::class, 'create'])->name('login');
