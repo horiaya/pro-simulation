@@ -17,15 +17,24 @@
         </div>
         <div class="payment-method">
             <h4 class="payment-method__title">支払い方法</h4>
-            <form action="{{ route('purchase.updatePaymentMethod', ['itemId' => $item->id, 'keep' => true]) }}" method="POST">
+            <form id="payment-form" action="{{ route('purchase.updatePaymentMethod', ['itemId' => $item->id]) }}" method="POST">
             @csrf
+                @if ($errors->has('payment'))
+                    <p class="error-message">{{ $errors->first('payment') }}</p>
+                @endif
                 <select class="payment-method__select" name="payment" id="payment-method">
-                    <option value="" disabled {{ empty($selectedPaymentMethod) ? 'selected' : '' }}>選択してください</option>
+                    <option value="" disabled {{ session("selected_payment_method_{$item->id}", '') == '' ? 'selected' : '' }}>選択してください</option>
                     @foreach($paymentMethods as $method)
-                        <option value="{{ $method->id }}" {{ (string)$selectedPaymentMethod === (string)$method->id ? 'selected' : '' }}>{{ $method->payment }}</option>
+                        <option value="{{ $method->id }}" {{ (string) $selectedPaymentMethod == (string) $method->id ? 'selected' : '' }}>
+                            {{ $method->payment }}
+                        </option>
                     @endforeach
                 </select>
             </form>
+            <div id="card-element" style="display: none;">
+                <label>カード情報</label>
+                <div id="card-element-container"></div>
+            </div>
         </div>
         <div class="shipping-address">
             <div class="shipping-address__head">
@@ -71,12 +80,14 @@
                 </tr>
             </table>
         </div>
-        <form class="purchase__form" action="" method="">
-            @csrf
-            <button class="purchase__form-btn" type="submit" class="btn btn-primary">購入する</button>
+        <form id="purchase-form" action="{{ route('purchase.store', ['itemId' => $item->id]) }}" method="POST">
+        @csrf
+            <input type="hidden" name="payment_method" id="hidden-payment-method" value="{{ $selectedPaymentMethod }}">
+            <button id="purchase-btn" class="purchase__form-btn" type="submit" class="btn btn-primary">購入する</button>
         </form>
     </div>
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const paymentSelect = document.getElementById('payment-method');
@@ -98,4 +109,5 @@
         });
     });
 </script>
+<script src="https://js.stripe.com/v3/"></script>
 @endsection

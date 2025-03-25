@@ -15,6 +15,7 @@
 
 .purchase__item {
     display: flex;
+    width: 100%;
     padding-bottom: 30px;
     border-bottom: 1px solid gray;
 }

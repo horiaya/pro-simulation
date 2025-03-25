@@ -79,6 +79,8 @@ Route::get('/comments/:{item}', [CommentController::class, 'index'])->name('comm
 Route::post('/upload-temp-image', [SellController::class, 'uploadTempImage'])
         ->name('upload.temp.image')
         ->middleware('api');
+Route::get('/purchase/success', [PurchaseController::class, 'success'])->name('purchase.success');
+Route::get('/purchase/cancel', [PurchaseController::class, 'cancel'])->name('purchase.cancel');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'create'])->name('profile.create');
@@ -100,4 +102,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/purchase/{itemId}/update-payment-method', [PurchaseController::class, 'updatePaymentMethod'])->name('purchase.updatePaymentMethod');
     Route::get('/purchase/address/{itemId}', [PurchaseController::class, 'indexAddress'])->name('address.indexAddress');
     Route::post('/address/update/{itemId}', [PurchaseController::class, 'updateAddress'])->name('purchase.updateAddress');
+    Route::post('/purchase/store/{itemId}', [PurchaseController::class, 'store'])->name('purchase.store');
 });

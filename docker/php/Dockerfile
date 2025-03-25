@@ -3,11 +3,22 @@ FROM php:7.4.9-fpm
 COPY php.ini /usr/local/etc/php/
 
 RUN apt update \
-  && apt install -y default-mysql-client zlib1g-dev libzip-dev unzip \
+  && apt install -y \
+    default-mysql-client \
+    zlib1g-dev \
+    libzip-dev \
+    unzip  \
+    wget\
+    curl \
   && docker-php-ext-install pdo_mysql zip
 
 RUN curl -sS https://getcomposer.org/installer | php \
   && mv composer.phar /usr/local/bin/composer \
   && composer self-update
+
+RUN wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz \
+  && tar -xvzf ngrok-v3-stable-linux-amd64.tgz \
+  && mv ngrok /usr/local/bin/ngrok \
+  && rm ngrok-v3-stable-linux-amd64.tgz
 
 WORKDIR /var/www

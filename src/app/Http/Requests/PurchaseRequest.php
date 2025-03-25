@@ -24,18 +24,21 @@ class PurchaseRequest extends FormRequest
     public function rules()
     {
         return [
-            'post_code' => 'required|string|regex:/^\d{3}-\d{4}$/',
-            'address' => 'required|string|max:100',
-            'building_name' => 'nullable|string|max:100',
+            'user_id' => 'required|exists:users,id',
+            'item_id' => 'required|exists:items,id',
+            'post_code' => 'required',
+            'address' => 'required',
+            'building_name' => 'nullable',
         ];
     }
 
     public function messages()
     {
         return [
-            'post_code.regex' => '郵便番号は「123-4567」の形式で入力してください',
-            'post_code.required' => '郵便番号を入力してください',
-            'address.required' => '住所を入力してください',
+            'user_id.required' => 'ユーザーがいません'
+            'item_id.required' => '商品が無効です'
+            'post_code.required' => '郵便番号が未登録です',
+            'address.required' => '住所が未登録です',
         ];
     }
 }

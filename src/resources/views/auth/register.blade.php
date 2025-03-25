@@ -17,28 +17,28 @@
             <div class="auth__item">
                 <p class="auth__item-title">ユーザー名</p>
                 @error('name')
-                    <p class="error-message">{{$errors->first('name')}}</p>
+                    <p class="error-message">{{ $message }}</p>
                 @enderror
                 <input class="auth__item-input" type="text" name="name">
             </div>
                 <div class="auth__item">
                 <p class="auth__item-title">メールアドレス</p>
                 @error('email')
-                    <p class="error-message">{{$errors->first('email')}}</p>
+                    <p class="error-message">{{ $message }}</p>
                 @enderror
             <input class="auth__item-input" type="email" name="email">
             </div>
             <div class="auth__item">
                 <p class="auth__item-title">パスワード</p>
                 @error('password')
-                    <p class="error-message">{{$errors->first('password')}}</p>
+                    <p class="error-message">{{ $message }}</p>
                 @enderror
                 <input class="auth__item-input" type="password" name="password">
             </div>
             <div class="auth__item">
                 <p class="auth__item-title">確認用パスワード</p>
                 @error('password')
-                    <p class="error-message">{{$errors->first('password')}}</p>
+                    <p class="error-message">{{ $message }}</p>
                 @enderror
                 <input class="auth__item-input" type="password" name="password_confirmation">
             </div>
