@@ -29,16 +29,18 @@ class PurchaseRequest extends FormRequest
             'post_code' => 'required',
             'address' => 'required',
             'building_name' => 'nullable',
+            'payment' => 'required|exists:payments,id',
         ];
     }
 
     public function messages()
     {
         return [
-            'user_id.required' => 'ユーザーがいません'
-            'item_id.required' => '商品が無効です'
+            'user_id.required' => 'ユーザーがいません',
+            'item_id.required' => '商品が無効です',
             'post_code.required' => '郵便番号が未登録です',
             'address.required' => '住所が未登録です',
+            'payment.required' => '支払い方法を選択してください',
         ];
     }
 }

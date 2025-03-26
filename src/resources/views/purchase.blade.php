@@ -2,6 +2,8 @@
 
 @section('content')
 <div class="purchase-content">
+    <form id="purchase-form" class="purchase-content__form" action="{{ route('purchase.store', ['itemId' => $item->id]) }}" method="POST">
+        @csrf
     <div class="purchase-content--left">
         <div class="purchase__item">
             <div class="purchase__item--left">
@@ -17,24 +19,17 @@
         </div>
         <div class="payment-method">
             <h4 class="payment-method__title">支払い方法</h4>
-            <form id="payment-form" action="{{ route('purchase.updatePaymentMethod', ['itemId' => $item->id]) }}" method="POST">
-            @csrf
-                @if ($errors->has('payment'))
-                    <p class="error-message">{{ $errors->first('payment') }}</p>
-                @endif
+                @error('payment')
+                    <p class="error-message">{{ $message }}</p>
+                @enderror
                 <select class="payment-method__select" name="payment" id="payment-method">
                     <option value="" disabled {{ session("selected_payment_method_{$item->id}", '') == '' ? 'selected' : '' }}>選択してください</option>
                     @foreach($paymentMethods as $method)
-                        <option value="{{ $method->id }}" {{ (string) $selectedPaymentMethod == (string) $method->id ? 'selected' : '' }}>
+                        <option value="{{ $method->id }}" {{ (string) old('payment_method', $selectedPaymentMethod) === (string) $method->id ? 'selected' : '' }}>
                             {{ $method->payment }}
                         </option>
                     @endforeach
                 </select>
-            </form>
-            <div id="card-element" style="display: none;">
-                <label>カード情報</label>
-                <div id="card-element-container"></div>
-            </div>
         </div>
         <div class="shipping-address">
             <div class="shipping-address__head">
@@ -58,7 +53,7 @@
                 <p class="shipping-content shipping__address">{{ $shippingAddress['address'] }}</p>
                 <p class="shipping-content shipping__building">{{ $shippingAddress['building_name'] ?? '' }}</p>
             @else
-                <p class="shipping-empty">住所が設定されていません。</p>
+                <p class="shipping-empty" style="color:red;">住所が設定されていません。</p>
             @endif
         </div>
     </div>
@@ -80,15 +75,17 @@
                 </tr>
             </table>
         </div>
-        <form id="purchase-form" action="{{ route('purchase.store', ['itemId' => $item->id]) }}" method="POST">
-        @csrf
-            <input type="hidden" name="payment_method" id="hidden-payment-method" value="{{ $selectedPaymentMethod }}">
+            <input type="hidden" name="payment_method" id="hidden-payment-method" value="{{ old('payment_method', session("selected_payment_method_{$item->id}")) }}">
             <button id="purchase-btn" class="purchase__form-btn" type="submit" class="btn btn-primary">購入する</button>
-        </form>
     </div>
+    </form>
 </div>
 
 <script>
+    document.getElementById('payment-method').addEventListener('change', function () {
+        document.getElementById('hidden-payment-method').value = this.value;
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
         const paymentSelect = document.getElementById('payment-method');
         const displayElement = document.getElementById('selected-payment');
@@ -104,8 +101,6 @@
             } else {
                 displayElement.textContent = selectedOption.textContent;
             }
-
-            this.form.submit();
         });
     });
 </script>

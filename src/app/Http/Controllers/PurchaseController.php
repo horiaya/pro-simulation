@@ -32,16 +32,19 @@ class PurchaseController extends Controller
         ]);
 
         $keepPaymentMethod = session()->pull('keep_payment_method', false);
-        $selectedPaymentMethod = $keepPaymentMethod ? session("selected_payment_method_{$itemId}", '') : '';
+        $selectedPaymentMethod = $keepPaymentMethod
+            ? session("selected_payment_method_{$itemId}", '')
+            : old('payment_method', '');
+        //$selectedPaymentMethod = $keepPaymentMethod ? session("selected_payment_method_{$itemId}", '') : '';
 
         return view('purchase', compact('item', 'paymentMethods', 'shippingAddress', 'user', 'selectedPaymentMethod'));
     }
 
     public function updatePaymentMethod(Request $request, $itemId)
     {
-        $request->validate([
+        /*$request->validate([
             'payment' => 'required|exists:payments,id',
-        ]);
+        ]);*/
 
         session(["selected_payment_method_{$itemId}" => $request->payment]);
 
@@ -98,7 +101,7 @@ class PurchaseController extends Controller
         ]);
     }
 
-    public function store(Request $request, $itemId)
+    public function store(PurchaseRequest $request, $itemId)
     {
         $user = auth()->user();
         $item = Item::findOrFail($itemId);
@@ -109,6 +112,8 @@ class PurchaseController extends Controller
         $paymentType = $paymentMethod->slug ?? 'card';
 
         $stripePaymentType = $paymentType === 'konbini' ? 'konbini' : 'card';
+
+        $validated = $request->validated();
 
         $shippingAddress = $this->getShippingAddress($user);
 
