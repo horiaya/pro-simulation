@@ -99,4 +99,14 @@
         width: 40%;
         padding: 20px;
     }
+    .subtotal__txt {
+        font-size: 13px;
+    }
+    .subtotal__list th,
+    .subtotal__list td {
+        padding: 10px;
+    }
+    .subtotal__display {
+        font-size: 15px;
+    }
 }

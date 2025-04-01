@@ -32,6 +32,10 @@
     .header__logo , .header__search {
         margin: auto 0;
     }
+    .header__search-form {
+        line-height: 55px;
+        margin: 0;
+    }
     .header__search-input {
         width: 350px;
         padding: 10px 30px;

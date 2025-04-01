@@ -2,6 +2,7 @@
 <style>
     .cancel {
         text-align: center;
+        margin-top: 100px;
     }
     .cancel a {
         text-decoration: none;
@@ -18,7 +19,6 @@
 @section('content')
 <div class="cancel">
     <h1 class="cancel__heading">お支払いがキャンセルされました</h1>
-    <p class="cancel__txt">もう一度お試しください</p>
     <a href="{{ route('index') }}">トップに戻る</a>
 </div>
 @endsection

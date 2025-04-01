@@ -11,14 +11,31 @@
     max-width: 250px;
     box-sizing: border-box;
 }
-.item__list-img {
+.item-wrapper__img, .item__list-img {
+    position: relative;
     height: 250px;
     width: 250px;
     box-sizing: border-box;
 }
+.sold-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    font-weight: bold;
+    color: white;
+    font-size: 25px;
+}
 .item__list-name {
     font-size: 15px;
 }
+
 
 #recommendBtn, #mylistBtn {
     border: none;
@@ -42,7 +59,7 @@
 }
 
 @media screen and (max-width: 850px) {
-    .item__list-img {
+    .item-wrapper__img, .item__list-img {
         height: 150px;
         width: 150px;
         box-sizing: border-box;
@@ -54,5 +71,8 @@
     .item-group {
         max-width: calc(150px * 3 + 40px * 2);
         gap: 40px;
+    }
+    .item__list {
+        max-width: 150px;            box-sizing: border-box;
     }
 }

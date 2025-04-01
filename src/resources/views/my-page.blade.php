@@ -42,10 +42,10 @@
         @else
             @foreach($purchases as $purchase)
                 <div class="item__list">
-                    <a class="item__list-link" href="{{ route('item.detail', ['id' => $item->id]) }}">
-                        <img class="item__list-img" src="{{ asset('storage/item_image/' . $item->item_image) }}" alt="商品画像">
+                    <a class="item__list-link" href="{{ route('item.detail', ['id' => $purchase->item->id]) }}">
+                        <img class="item__list-img" src="{{ asset('storage/item_image/' . $purchase->item->item_image) }}" alt="商品画像">
                     </a>
-                    <p class="item__list-name">{{ $item->item_name }}</p>
+                    <p class="item__list-name">{{ $purchase->item->item_name }}</p>
                 </div>
             @endforeach
         @endif

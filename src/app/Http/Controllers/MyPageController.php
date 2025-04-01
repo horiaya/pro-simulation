@@ -17,7 +17,7 @@ class MyPageController extends Controller
 
         $items = Item::where('user_id', $user->id)->get();
 
-        $purchases = Purchase::where('user_id', $user->id)->get();
+        $purchases = Purchase::with('item')->where('user_id', $user->id)->get();
 
         return view('my-page', compact('user', 'items', 'purchases'));
     }

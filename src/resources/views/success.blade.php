@@ -2,6 +2,7 @@
 <style>
     .success {
         text-align: center;
+        margin-top: 100px;
     }
     .success a {
         text-decoration: none;

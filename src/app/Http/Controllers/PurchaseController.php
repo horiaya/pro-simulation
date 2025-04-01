@@ -15,7 +15,7 @@ use Stripe\Stripe;
 use Stripe\Webhook;
 use Stripe\PaymentIntent;
 use Stripe\Checkout\Session as StripeSession;
-//use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log;
 
 class PurchaseController extends Controller
 {
@@ -31,28 +31,23 @@ class PurchaseController extends Controller
             'building_name' => $user->building_name ?? '',
         ]);
 
-        $keepPaymentMethod = session()->pull('keep_payment_method', false);
-        $selectedPaymentMethod = $keepPaymentMethod
+        $keep = session()->get('keep_payment_method', false);
+
+        $selectedPaymentMethod = $keep
             ? session("selected_payment_method_{$itemId}", '')
-            : old('payment_method', '');
-        //$selectedPaymentMethod = $keepPaymentMethod ? session("selected_payment_method_{$itemId}", '') : '';
+            : old('payment', '');
+
+        session()->forget('keep_payment_method');
 
         return view('purchase', compact('item', 'paymentMethods', 'shippingAddress', 'user', 'selectedPaymentMethod'));
     }
 
     public function updatePaymentMethod(Request $request, $itemId)
     {
-        /*$request->validate([
-            'payment' => 'required|exists:payments,id',
-        ]);*/
-
-        session(["selected_payment_method_{$itemId}" => $request->payment]);
-
-        session()->forget('errors');
-
+        session()->put("selected_payment_method_{$itemId}", $request->input('payment'));
         session()->put('keep_payment_method', true);
 
-        return redirect()->route('purchase.show', ['itemId' => $itemId]);
+        return response()->json(['status' => 'OK']);
     }
 
     public function indexAddress($itemId)
@@ -65,7 +60,9 @@ class PurchaseController extends Controller
             'building_name' => $user->building_name ?? '',
         ]);
 
-        return view('auth.address', compact('itemId', 'shippingAddress'));
+        $selectedPaymentMethod = session("selected_payment_method_{$itemId}", '');
+
+        return view('auth.address', compact('itemId', 'shippingAddress', 'selectedPaymentMethod'));
     }
 
     public function updateAddress(Request $request, $itemId)
@@ -107,10 +104,11 @@ class PurchaseController extends Controller
         $item = Item::findOrFail($itemId);
         Stripe::setApiKey(config('services.stripe.secret'));
 
-        $paymentMethodId = session("selected_payment_method_{$itemId}");
+        session(["selected_payment_method_{$itemId}" => $request->input('payment')]);
+
+        $paymentMethodId = $request->input('payment');
         $paymentMethod = Payment::find($paymentMethodId);
         $paymentType = $paymentMethod->slug ?? 'card';
-
         $stripePaymentType = $paymentType === 'konbini' ? 'konbini' : 'card';
 
         $validated = $request->validated();
@@ -187,15 +185,6 @@ class PurchaseController extends Controller
     public function cancel()
     {
         return view('cancel');
-    }
-
-    private function clearOtherSelectedPayments($currentItemId)
-    {
-        foreach (session()->all() as $key => $value) {
-            if (str_starts_with($key, 'selected_payment_method_') && $key !== "selected_payment_method_{$currentItemId}") {
-                session()->forget($key);
-            }
-        }
     }
 }
 

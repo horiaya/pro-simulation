@@ -9,6 +9,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MyList;
 use App\Models\User;
+use App\Models\Purchase;
 
 
 
@@ -17,6 +18,7 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->input('keyword');
+        $soldItemIds = Purchase::pluck('item_id')->toArray();
 
         if (!Auth::check()) {
             $items = Item::search($keyword)->get();
@@ -41,13 +43,14 @@ class ItemController extends Controller
         }
 
         return view('index', compact(
-            'items', 'keyword', 'errorMessage', 'myListItems'));
+            'items', 'keyword', 'errorMessage', 'myListItems', 'soldItemIds'));
     }
 
     public function show($id)
     {
         $item = Item::with(['category', 'condition', 'comments', 'user'])->findOrFail($id);
         $user = Auth::user();
+        $isSold = Purchase::where('item_id', $id)->exists();
 
         foreach (session()->all() as $key => $value) {
             if (str_starts_with($key, 'selected_payment_method_')) {
@@ -61,6 +64,6 @@ class ItemController extends Controller
         $comments = $item->comments;
         $commentCount = $item->comments()->count();
 
-        return view('detail', compact('item', 'myListCount', 'isInMyList', 'comments', 'commentCount'));
+        return view('detail', compact('item', 'myListCount', 'isInMyList', 'comments', 'commentCount', 'isSold'));
     }
 }

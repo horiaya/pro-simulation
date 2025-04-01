@@ -26,9 +26,6 @@ class PurchaseRequest extends FormRequest
         return [
             'user_id' => 'required|exists:users,id',
             'item_id' => 'required|exists:items,id',
-            'post_code' => 'required',
-            'address' => 'required',
-            'building_name' => 'nullable',
             'payment' => 'required|exists:payments,id',
         ];
     }
@@ -38,9 +35,8 @@ class PurchaseRequest extends FormRequest
         return [
             'user_id.required' => 'ユーザーがいません',
             'item_id.required' => '商品が無効です',
-            'post_code.required' => '郵便番号が未登録です',
-            'address.required' => '住所が未登録です',
             'payment.required' => '支払い方法を選択してください',
+            'payment.exists'   => '選択された支払い方法が無効です',
         ];
     }
 }

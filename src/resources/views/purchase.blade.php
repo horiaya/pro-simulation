@@ -4,6 +4,12 @@
 <div class="purchase-content">
     <form id="purchase-form" class="purchase-content__form" action="{{ route('purchase.store', ['itemId' => $item->id]) }}" method="POST">
         @csrf
+@if(session()->get('_old_input'))
+    <div class="debug">
+        <pre>{{ print_r(session()->get('_old_input'), true) }}</pre>
+    </div>
+@endif
+
     <div class="purchase-content--left">
         <div class="purchase__item">
             <div class="purchase__item--left">
@@ -23,9 +29,9 @@
                     <p class="error-message">{{ $message }}</p>
                 @enderror
                 <select class="payment-method__select" name="payment" id="payment-method">
-                    <option value="" disabled {{ session("selected_payment_method_{$item->id}", '') == '' ? 'selected' : '' }}>選択してください</option>
+                    <option value="" disabled {{ $selectedPaymentMethod === '' ? 'selected' : '' }}>選択してください</option>
                     @foreach($paymentMethods as $method)
-                        <option value="{{ $method->id }}" {{ (string) old('payment_method', $selectedPaymentMethod) === (string) $method->id ? 'selected' : '' }}>
+                        <option value="{{ $method->id }}" {{ (string) old('payment', $selectedPaymentMethod) === (string) $method->id ? 'selected' : '' }}>
                             {{ $method->payment }}
                         </option>
                     @endforeach
@@ -70,38 +76,51 @@
                 <tr>
                     <th class="subtotal__txt">支払い方法</th>
                     <td id="selected-payment" class="subtotal__display">
-                        {{ $selectedPaymentMethod ? \App\Models\Payment::find($selectedPaymentMethod)->payment : '未選択' }}
                     </td>
                 </tr>
             </table>
         </div>
-            <input type="hidden" name="payment_method" id="hidden-payment-method" value="{{ old('payment_method', session("selected_payment_method_{$item->id}")) }}">
+            <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+            <input type="hidden" name="item_id" value="{{ $item->id }}">
             <button id="purchase-btn" class="purchase__form-btn" type="submit" class="btn btn-primary">購入する</button>
     </div>
     </form>
 </div>
 
 <script>
-    document.getElementById('payment-method').addEventListener('change', function () {
-        document.getElementById('hidden-payment-method').value = this.value;
-    });
-
+    //小計の支払い方法の更新と住所変更後のリダイレクト時のセッション保持
     document.addEventListener('DOMContentLoaded', () => {
         const paymentSelect = document.getElementById('payment-method');
         const displayElement = document.getElementById('selected-payment');
+        const itemId = {{ $item->id }};
 
-        const selectedOption = paymentSelect.options[paymentSelect.selectedIndex];
-        displayElement.textContent = selectedOption.value ? selectedOption.textContent : "未選択";
+        const updateDisplayAndSession = () => {
+            const selectedOption = paymentSelect.options[paymentSelect.selectedIndex];
+            const selectedValue = paymentSelect.value;
 
-        paymentSelect.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
+            displayElement.textContent = selectedValue ? selectedOption.textContent : '未選択';
 
-            if (this.value === "") {
-                displayElement.textContent = "未選択";
-            } else {
-                displayElement.textContent = selectedOption.textContent;
-            }
-        });
+            fetch(`/purchase/${itemId}/payment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ payment: selectedValue })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('支払い方法の保存に失敗しました');
+                }
+            })
+            .catch(error => {
+                console.error('通信エラー:', error);
+            });
+        };
+
+        updateDisplayAndSession();
+
+        paymentSelect.addEventListener('change', updateDisplayAndSession);
     });
 </script>
 <script src="https://js.stripe.com/v3/"></script>

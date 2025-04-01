@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,8 +26,6 @@ use Illuminate\Support\Facades\Log;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-
 
 
 Route::get('/verify-email', function () {return view('auth.verify-email');})->name('verify-email');
@@ -76,9 +73,11 @@ Route::post('/logout', [CustomLoginController::class, 'logout'])->name('logout')
 Route::get('/', [ItemController::class, 'index'])->name('index');
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.detail');
 Route::get('/comments/:{item}', [CommentController::class, 'index'])->name('comments.index');
+
 Route::post('/upload-temp-image', [SellController::class, 'uploadTempImage'])
         ->name('upload.temp.image')
         ->middleware('api');
+
 Route::get('/purchase/success', [PurchaseController::class, 'success'])->name('purchase.success');
 Route::get('/purchase/cancel', [PurchaseController::class, 'cancel'])->name('purchase.cancel');
 
@@ -99,7 +98,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/sell', [SellController::class, 'store'])->name('sell.store');
 
     Route::get('/purchase/{itemId}', [PurchaseController::class, 'show'])->name('purchase.show');
-    Route::post('/purchase/{itemId}/update-payment-method', [PurchaseController::class, 'updatePaymentMethod'])->name('purchase.updatePaymentMethod');
+    Route::post('/purchase/{itemId}/payment', [PurchaseController::class, 'updatePaymentMethod'])->name('purchase.updatePaymentMethod');
     Route::get('/purchase/address/{itemId}', [PurchaseController::class, 'indexAddress'])->name('address.indexAddress');
     Route::post('/address/update/{itemId}', [PurchaseController::class, 'updateAddress'])->name('purchase.updateAddress');
     Route::post('/purchase/store/{itemId}', [PurchaseController::class, 'store'])->name('purchase.store');
