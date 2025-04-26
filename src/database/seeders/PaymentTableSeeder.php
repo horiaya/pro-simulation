@@ -16,11 +16,13 @@ class PaymentTableSeeder extends Seeder
     {
         $param = [
             'payment' => 'コンビニ払い',
+            'slug' => 'konbini',
         ];
         DB::table('payments')->insert($param);
 
         $param = [
             'payment' => 'カード支払い',
+            'slug' => 'card',
         ];
         DB::table('payments')->insert($param);
     }
