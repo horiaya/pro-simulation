@@ -31,6 +31,16 @@
 [ER図](https://github.com/user-attachments/assets/c5c6bbcd-0554-4fd1-81db-cf439270db4b)
 
 ## 環境構築
+このプロジェクトは Laravel 本体が `src/` ディレクトリにあります。
+Docker構成で /src は /var/www にマウントされています。
+nginx 経由でポート 80 番（http://localhost）からアクセスできます。
+
+php artisan serve の使用は不要です（nginxが処理しているため）。
+
+以下の手順で Laravel の開発環境を起動できます
+
+---
+
 ### １、リポジトリのクローン
 ```sh
 git clone https://github.com/horiaya/pro-simulation.git
@@ -39,6 +49,7 @@ cd pro-simulation
 
 ### 2、.envの設定
 ```sh
+cd src
 cp .env.example .env
 ```
 ### ３、DBの設定
@@ -51,17 +62,29 @@ DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_pass
 ```
 
-### ４、keyの作成
+### ４、Docker コンテナの起動（ホスト側）
+```sh
+cd ..
+docker compose up -d
+```
+
+### ５、PHP コンテナに入り、Laravelのセットアップ（コンテナ内）
+```sh
+docker compose exec php bash
+cd /var/www
+
+# 依存パッケージをインストール（初回のみ）
+composer install
+
+# アプリケーションキーの生成
 php artisan key:generate
 
-### ５、DBをmigrateする
+# マイグレーションの実行（初回のみ）
 php artisan migrate
+```
 
-### ６、起動
-php artisan serve
-
-### ７、アクセス
-http://localhost:80/login
+### 6、アクセス
+http://localhost/login
 
 ### その他
 
