@@ -30,7 +30,7 @@
     margin-top: 35px;
 }
 
-#sellBtn, #purchaseBtn {
+#sellBtn, #purchaseBtn, #tradingBtn {
     border: none;
     background-color: white;
     font-size: 20px;
@@ -38,7 +38,8 @@
     color: gray;
 }
 #sellBtn.active,
-#purchaseBtn.active {
+#purchaseBtn.active,
+#tradingBtn.active {
     color: #ff5151;
 }
 

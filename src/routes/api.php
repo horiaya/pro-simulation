@@ -22,3 +22,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //購入情報の保存
 Route::post('/webhook/stripe', [PurchaseController::class, 'handleWebhook']);
+
+Route::get('/test-php', function () {
+    \Log::info('✅ test-php に到達');
+    return response()->json(['status' => 'ok']);
+});
+

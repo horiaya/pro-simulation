@@ -13,7 +13,7 @@
         <div class="item__list">
             <a class="item__list-link" href="{{ route('item.detail', ['id' => $item->id]) }}">
                 <div class="item-wrapper__img">
-                    <img class="item__list-img" src="{{ asset('storage/item_image/' . $item->item_image) }}" alt="商品画像">
+                    <img class="item__list-img" src="{{ Storage::url('item_image/'. $item->item_image) }}" alt="商品画像">
                     @if(in_array($item->id, $soldItemIds))
                         <span class="item__list-img sold-overlay">SOLD</span>
                     @endif
@@ -34,7 +34,7 @@
         <div class="item__list">
             <a class="item__list-link" href="{{ route('item.detail', ['id' => $item->id]) }}">
                 <div class="item-wrapper__img">
-                    <img class="item__list-img" src="{{ asset('storage/item_image/' . $item->item_image) }}" alt="商品画像">
+                    <img class="item__list-img" src="{{ Storage::url('item_image/'. $item->item_image) }}" alt="商品画像">
                     @if(in_array($item->id, $soldItemIds))
                         <span class="item__list-img sold-overlay">SOLD</span>
                     @endif

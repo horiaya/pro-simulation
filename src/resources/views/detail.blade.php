@@ -3,7 +3,7 @@
 @section('content')
 <div class="detail__item">
     <div class="detail__item--left">
-        <img class="detail__item-img" src="{{ asset('storage/item_image/' . $item->item_image) }}" alt="商品画像">
+        <img class="detail__item-img" src="{{ Storage::url('item_image/' . $item->item_image) }}" alt="商品画像">
     </div>
     <div class="item__content--right">
         <div class="top-item">
@@ -59,7 +59,7 @@
                 <div class="comment-item">
                     <div class="comment-header">
                         @if($comment->sender->icon_path)
-                            <img class="comment-icon" src="{{ asset('storage/' . $comment->sender->icon_path) }}" alt="プロフィール画像">
+                            <img class="comment-icon" src="{{ Storage::url('icons/' . $comment->sender->icon_path) }}" alt="プロフィール画像">
                         @else
                             <div class="comment-placeholder"></div>
                         @endif

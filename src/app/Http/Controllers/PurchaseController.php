@@ -84,6 +84,7 @@ class PurchaseController extends Controller
         ]);
 
         session()->put('keep_payment_method', true);
+        Session::save();
 
         return redirect()->route('purchase.show', ['itemId' => $itemId])
                         ->with('success', '住所が更新されました。');
@@ -145,6 +146,8 @@ class PurchaseController extends Controller
 
     public function handleWebhook(Request $request)
     {
+        //\Log::info('✅ WebhookがLaravelに到達しました');
+
         $payload = $request->getContent();
         $sigHeader = $request->header('Stripe-Signature');
         $endpointSecret = config('services.stripe.webhook_secret');
@@ -152,26 +155,45 @@ class PurchaseController extends Controller
         try {
             $event = \Stripe\Webhook::constructEvent($payload, $sigHeader, $endpointSecret);
         } catch (\Exception $e) {
+            /*Log::error('Webhook署名検証エラー', ['error' => $e->getMessage(),
+        'sigHeader' => $sigHeader,
+        'payload' => $payload,]);*/
             return response('Invalid payload or signature', 400);
         }
 
     if ($event->type === 'checkout.session.completed') {
         $session = $event->data->object;
 
-        $metadata = $session->metadata->toArray();
+        $metadata = $session->metadata ? $session->metadata->toArray() : [];
+
+        /*if (!isset($metadata['user_id'], $metadata['item_id'])) {
+            return response('Missing required metadata', 400);
+        }*/
+        if (
+            empty($metadata['user_id']) ||
+            empty($metadata['item_id']) ||
+            empty($metadata['payment_method']) ||
+            empty($metadata['post_code']) ||
+            empty($metadata['address'])
+        ) {
+            \Log::error('Webhookメタデータが不足しています', ['metadata' => $metadata]);
+            return response('Invalid metadata', 400);
+        }
 
         Purchase::create([
-            'user_id' => $metadata['user_id'] ?? null,
-            'item_id' => $metadata['item_id'] ?? null,
-            'payment_id' => $metadata['payment_method'] ?? null,
-            'post_code' => $metadata['post_code'] ?? '',
-            'address' => $metadata['address'] ?? '',
+            'user_id' => (int) $metadata['user_id'],
+            'item_id' => (int) $metadata['item_id'],
+            'payment_id' => (int) $metadata['payment_method'],
+            'post_code' => $metadata['post_code'],
+            'address' => $metadata['address'],
             'building_name' => $metadata['building_name'] ?? '',
         ]);
 
-        if (!isset($metadata['user_id'], $metadata['item_id'])) {
-            return response('Missing required metadata', 400);
-        }
+        Transaction::create([
+            'buyer_id' => (int) $metadata['user_id'],
+            'item_id' => (int) $metadata['item_id'],
+            'status' => 'pending',
+        ]);
     }
 
         return response('Webhook handled', 200);

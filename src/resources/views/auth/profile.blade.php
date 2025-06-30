@@ -10,11 +10,11 @@
             <div class="profile__item">
                 <div class="profile-icon-content">
                 @if(auth()->user()->icon_path)
-                    <img class="profile__icon" id="preview" src="{{ asset('storage/' . auth()->user()->icon_path) }}" alt="プロフィール画像">
+                    <img class="profile__icon" id="preview" src="{{ Storage::url('icons/' . auth()->user()->icon_path) }}" alt="プロフィール画像">
                 @else
                     <div class="profile-placeholder" id="preview-placeholder"></div>
                 @endif
-                    <input class="profile__icon-select" type="file" name="icon_path" id="icon" accept="image/*" style="display: none;" value="{{ asset('storage/' . auth()->user()->icon_path) }}">
+                    <input class="profile__icon-select" type="file" name="icon_path" id="icon" accept="image/*" style="display: none;" value="{{ Storage::url('icons/' . auth()->user()->icon_path) }}">
                     <label class="profile__select-btn" for="icon">画像を選択する</label>
                 </div>
             </div>

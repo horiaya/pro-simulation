@@ -1,0 +1,105 @@
+.transaction {
+    display: flex;
+}
+.no-padding .content {
+    padding: 0 !important;
+}
+.transaction__group--left {
+    background-color: rgb(154, 149, 149);
+    height: 750px;
+    width: 15%;
+    box-sizing: border-box;
+}
+.transaction__side-title {
+    margin: 0;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    padding-top: 10px;
+}
+
+
+.transaction__group--right {
+    width: 85%;
+    box-sizing: border-box;
+}
+.transaction__head {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    border-bottom: 2px solid gray;
+}
+.transaction__head-heading, .transaction__head-side {
+    display: flex;
+    align-items: center;
+}
+.transaction__head-placeholder {
+    background-color: #ccc;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.transaction__head-title {
+    margin: 0;
+    font-size: 28px;
+}
+.transaction__head-btn {
+    background-color: #ff5151;
+    color: white;
+    border-radius: 20px;
+    padding: 5px 10px;
+    border: none;
+    font-size: 15px;
+}
+
+.transaction__item {
+    height: 130px;
+    display: flex;
+    padding: 10px 20px;
+    border-bottom: 2px solid gray;
+    background-color: antiquewhite;
+}
+.transaction__item-img  {
+    line-height: 130px;
+    background-color: aquamarine;
+}
+.transaction-group__item {
+    height: 130px;
+    margin-left: 50px;
+}
+.transaction__item-large, .transaction__item-small {
+    margin: 0;
+    line-height: 130px;
+}
+
+.message {
+    background-color: burlywood;
+    padding: 5px 20px 80px;
+}
+.message__user-img, .message__user-name {
+    display: inline-block;
+}
+.message-content {
+    display: inline-block;
+    background-color: gray;
+    padding: 5px 10px;
+    border-radius: 3px;
+    max-width: 45%;
+    word-wrap: break-word;
+}
+.message__edit {
+    justify-items: center;
+    width: 45%;
+    display: flex;
+    justify-content: flex-end;
+}
+.message__edit-btn {
+    color: gray;
+}
+.message__delete {
+    margin-left: 20px;
+}

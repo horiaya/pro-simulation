@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/purchase.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/address.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/sell.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/transaction.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <title>coachtech</title>
 </head>
@@ -82,9 +83,12 @@
         <div class="header-content">
             <div class="header__logo">
                 <a href="{{ route('index') }}">
-                    <img class="header__img" src="{{ asset('storage/images/logo.svg') }}" alt="コーチテックのロゴ">
+                    <img class="header__img" src="{{ Storage::url('images/logo.svg') }}" alt="コーチテックのロゴ">
                 </a>
             </div>
+            @hasSection('hide-header-nav')
+
+            @else
             <div class="header__search">
                 <form id="searchForm" class="header__search-form" action="{{ route('index') }}" method="get">
                     <input class="header__search-input search__name" type="text" name="keyword" placeholder="なにをお探しですか？" onkeypress="submitOnEnter(event)" value="{{ request('keyword') }}" />
@@ -102,9 +106,10 @@
                 <a class="header__nav-link" href="{{ route('mypage.index') }}">マイページ</a>
                 <a class="header__nav-link" href="{{ route('sell.create') }}">出品</a>
             </div>
+            @endif
         </div>
     </header>
-    <main>
+    <main class="@yield('main-class')">
         <div class="content">
             @yield('content')
         </div>

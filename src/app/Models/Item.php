@@ -61,4 +61,9 @@ class Item extends Model
         }
         return $query;
     }
+
+    public function transaction()
+    {
+        return $this->hasOne(Transaction::class);
+    }
 }

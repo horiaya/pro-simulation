@@ -20,7 +20,7 @@
                 @endphp
 
                 @if(!empty($imageTemp))
-                    <img src="{{ asset('storage/temp/' . $imageTemp) }}" id="image-output" class="sell__img-cover">
+                    <img src="{{ Storage::url('temp/' . $imageTemp) }}" id="image-output" class="sell__img-cover">
                 @else
                     <img src="" id="image-output" class="sell__img-cover" style="display: none;">
                 @endif

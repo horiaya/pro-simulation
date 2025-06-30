@@ -9,7 +9,7 @@
         @endif
         <div class="mypage__head">
             @if($user->icon_path)
-                <img class="mypage__icon" src="{{ asset('storage/' . $user->icon_path) }}" alt="プロフィール画像">
+                <img class="mypage__icon" src="{{ Storage::url($user->icon_path) }}" alt="プロフィール画像">
             @else
                 <div class="mypage__placeholder"></div>
             @endif
@@ -21,6 +21,7 @@
         <div class="item__list-tab">
             <button onclick="showTab('sell')" id="sellBtn" class="active">出品した商品</button>
             <button onclick="showTab('purchase')" id="purchaseBtn">購入した商品</button>
+            <button onclick="showTab('trading')" id="tradingBtn">取引中の商品</button>
         </div>
         <div id="sellTab" class="sell-item item-group">
         @if($items->isEmpty())
@@ -29,7 +30,7 @@
             @foreach($items as $item)
                 <div class="item__list">
                     <a class="item__list-link" href="{{ route('item.detail', ['id' => $item->id]) }}">
-                        <img class="item__list-img" src="{{ asset('storage/item_image/' . $item->item_image) }}" alt="商品画像">
+                        <img class="item__list-img" src="{{ Storage::url('item_image/'. $item->item_image) }}" alt="商品画像">
                     </a>
                     <p class="item__list-name">{{ $item->item_name }}</p>
                 </div>
@@ -43,12 +44,26 @@
             @foreach($purchases as $purchase)
                 <div class="item__list">
                     <a class="item__list-link" href="{{ route('item.detail', ['id' => $purchase->item->id]) }}">
-                        <img class="item__list-img" src="{{ asset('storage/item_image/' . $purchase->item->item_image) }}" alt="商品画像">
+                        <img class="item__list-img" src="{{ Storage::url('item_image/'. $purchase->item->item_image) }}" alt="商品画像">
                     </a>
                     <p class="item__list-name">{{ $purchase->item->item_name }}</p>
                 </div>
             @endforeach
         @endif
+        </div>
+        <div id="tradingTab" class="trading-item item-group">
+            @if($transactions->isEmpty())
+                <p>取引中の商品はありません。</p>
+            @else
+                @foreach($transactions as $transaction)
+                    <div class="item__list">
+                        <a href="{{ route('item.detail', ['id' => $transaction->item->id]) }}">
+                            <img src="{{ Storage::url('item_image/' . $transaction->item->item_image) }}" alt="商品画像">
+                        </a>
+                        <p>{{ $transaction->item->item_name }}</p>
+                    </div>
+                @endforeach
+            @endif
         </div>
     </div>
 
@@ -60,11 +75,14 @@
         function showTab(tab) {
         document.getElementById('sellTab').style.display = 'none';
         document.getElementById('purchaseTab').style.display = 'none';
+        document.getElementById('tradingTab').style.display = 'none';
 
         document.getElementById(tab + 'Tab').style.display = 'flex';
 
         document.getElementById('sellBtn').classList.remove('active');
         document.getElementById('purchaseBtn').classList.remove('active');
+        document.getElementById('tradingBtn').classList.remove('active');
+
         document.getElementById(tab + 'Btn').classList.add('active');
     }
     </script>

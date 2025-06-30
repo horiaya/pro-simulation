@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Purchase;
+use App\Models\Transaction;
+use App\Http\Controllers\TransactionController;
 
 class MyPageController extends Controller
 {
@@ -19,6 +21,11 @@ class MyPageController extends Controller
 
         $purchases = Purchase::with('item')->where('user_id', $user->id)->get();
 
-        return view('my-page', compact('user', 'items', 'purchases'));
+        $transactions = Transaction::with('item')
+            ->where('buyer_id', $user->id)
+            ->where('status', '!=', 'completed')
+            ->get();
+
+        return view('my-page', compact('user', 'items', 'purchases', 'transactions'));
     }
 }

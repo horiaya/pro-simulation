@@ -13,7 +13,7 @@
     <div class="purchase-content--left">
         <div class="purchase__item">
             <div class="purchase__item--left">
-                <img class="purchase__item-img" src="{{ asset('storage/item_image/' . $item->item_image) }}" alt="商品画像">
+                <img class="purchase__item-img" src="{{ Storage::url('item_image/'. $item->item_image) }}" alt="商品画像">
             </div>
             <div class="purchase__item--right">
                 <h3 class="purchase__item-name">{{ $item->item_name }}</h3>
