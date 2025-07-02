@@ -71,8 +71,18 @@ class User extends Authenticatable
         return $this->belongsToMany(Item::class, 'my_lists', 'user_id', 'item_id');
     }
 
-    public function transaction()
+    public function transactions()
     {
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(Transaction::class, 'buyer_id');
+    }
+
+    public function receivedReviews()
+    {
+        return $this->hasMany(Review::class, 'reviewee_id');
+    }
+
+    public function givenReviews()
+    {
+        return $this->hasMany(Review::class, 'reviewer_id');
     }
 }

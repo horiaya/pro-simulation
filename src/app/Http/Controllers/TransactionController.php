@@ -9,18 +9,24 @@ use App\Http\Controllers\Controller;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Transaction;
+use App\Models\TransactionMessage;
 
 class TransactionController extends Controller
 {
-    // public function index($itemId)
-    public function index()
+    public function index($itemId)
     {
         $user = Auth::user();
-        //$item = Item::with(['transaction', 'user'])->findOrFail($itemId);
+        $item = Item::findOrFail($itemId);
 
-        $transaction = transaction::all();
-        $transactionMessage = transaction::all();
+        $transactions = Transaction::where('item_id', $itemId)
+                ->with(['buyer',  'item.user'])
+                ->firstOrFail();
 
-        return view('transaction', compact('user', 'transaction', 'transactionMessage'));
+        $transactionMessages = TransactionMessage::where('transaction_id', $transactions->id)
+                ->with('user')
+                ->latest()
+                ->get();
+
+        return view('transaction', compact('user', 'item', 'transactions', 'transactionMessages'));
     }
 }

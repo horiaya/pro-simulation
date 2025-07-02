@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             UserTableSeeder::class,
             ItemCategoriesTableSeeder::class,
             PaymentTableSeeder::class,
+            TransactionsTableSeeder::class,
         ]);
     }
 }

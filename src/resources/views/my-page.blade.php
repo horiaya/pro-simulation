@@ -57,10 +57,10 @@
             @else
                 @foreach($transactions as $transaction)
                     <div class="item__list">
-                        <a href="{{ route('item.detail', ['id' => $transaction->item->id]) }}">
-                            <img src="{{ Storage::url('item_image/' . $transaction->item->item_image) }}" alt="商品画像">
+                        <a href="{{ route('transaction.index', ['itemId' => $transaction->item_id]) }}">
+                            <img class="item__list-img" src="{{ Storage::url('item_image/' . $transaction->item->item_image) }}" alt="商品画像">
                         </a>
-                        <p>{{ $transaction->item->item_name }}</p>
+                        <p class="item__list-name">{{ $transaction->item->item_name }}</p>
                     </div>
                 @endforeach
             @endif

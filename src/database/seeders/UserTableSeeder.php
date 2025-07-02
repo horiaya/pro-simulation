@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class UserTableSeeder extends Seeder
 {
@@ -17,6 +18,10 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
+        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        User::truncate();
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         $param = [
             'name' => 'テストA',
             'email' => 'aaa@aaa.com',
@@ -39,24 +44,6 @@ class UserTableSeeder extends Seeder
             'name' => 'テストC',
             'email' => 'ccc@ccc.com',
             'password' => Hash::make('cccc1234'),
-            'remember_token' => Str::random(10),
-            'email_verified_at' => Carbon::now(),
-        ];
-        DB::table('users')->insert($param);
-
-        $param = [
-            'name' => 'テストD',
-            'email' => 'ddd@ddd.com',
-            'password' => Hash::make('dddd1234'),
-            'remember_token' => Str::random(10),
-            'email_verified_at' => Carbon::now(),
-        ];
-        DB::table('users')->insert($param);
-
-        $param = [
-            'name' => 'テストE',
-            'email' => 'eee@eee.com',
-            'password' => Hash::make('eeee1234'),
             'remember_token' => Str::random(10),
             'email_verified_at' => Carbon::now(),
         ];

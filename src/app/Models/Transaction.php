@@ -13,11 +13,15 @@ class Transaction extends Model
 
     public function item()
     {
-        return $this->belongTo(Item::class);
+        return $this->belongsTo(Item::class);
     }
 
     public function buyer()
     {
-        return $this->belongTo(User::class, 'buyer_id');
+        return $this->belongsTo(User::class, 'buyer_id');
+    }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }

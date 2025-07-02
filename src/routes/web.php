@@ -94,7 +94,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
     Route::get('/mypage', [MyPageController::class, 'index'])->name('mypage.index');
-    Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction.index');
+    Route::get('/transaction/{itemId}', [TransactionController::class, 'index'])->name('transaction.index');
 
     Route::get('/sell', [SellController::class, 'create'])->name('sell.create');
     Route::post('/sell', [SellController::class, 'store'])->name('sell.store');

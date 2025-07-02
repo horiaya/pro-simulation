@@ -1,14 +1,17 @@
+
 .transaction {
     display: flex;
+    height: 100%;
 }
 .no-padding .content {
     padding: 0 !important;
+    height: 100%;
 }
 .transaction__group--left {
     background-color: rgb(154, 149, 149);
-    height: 750px;
     width: 15%;
     box-sizing: border-box;
+    flex-shrink: 0;
 }
 .transaction__side-title {
     margin: 0;
@@ -23,8 +26,12 @@
 .transaction__group--right {
     width: 85%;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 .transaction__head {
+    flex: 0 0 auto;
     height: 70px;
     display: flex;
     justify-content: space-between;
@@ -42,6 +49,7 @@
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
+    margin-right: 20px;
 }
 .transaction__head-title {
     margin: 0;
@@ -57,15 +65,16 @@
 }
 
 .transaction__item {
+    flex: 0 0 auto;
     height: 130px;
     display: flex;
     padding: 10px 20px;
     border-bottom: 2px solid gray;
-    background-color: antiquewhite;
 }
-.transaction__item-img  {
-    line-height: 130px;
-    background-color: aquamarine;
+.transaction__item-img--left {
+    height: 110px;
+    width: 110px;
+    display: inline-block;
 }
 .transaction-group__item {
     height: 130px;
@@ -77,23 +86,57 @@
 }
 
 .message {
-    background-color: burlywood;
     padding: 5px 20px 80px;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    background-color: aquamarine;
 }
-.message__user-img, .message__user-name {
+.message-group {
+    max-width: 45%;
+    margin-bottom: 10px;
+}
+.message__partner--left {
+    align-self: flex-start;
+    flex-direction: row;
+}
+.message__myself--right {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+.message__myself--right .message__user {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+.message__user {
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+.message__user-name {
+    margin: 0 10px;
+    font-weight: bold;
     display: inline-block;
+}
+.message__user-placeholder {
+    background-color: #ccc;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 .message-content {
-    display: inline-block;
-    background-color: gray;
+    display: flex;
+    background-color: #ccc;
     padding: 5px 10px;
     border-radius: 3px;
-    max-width: 45%;
+    max-width: 100%;
     word-wrap: break-word;
 }
 .message__edit {
-    justify-items: center;
-    width: 45%;
     display: flex;
     justify-content: flex-end;
 }

@@ -17,9 +17,20 @@
     <title>coachtech</title>
 </head>
 <style>
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
     header {
         background-color:black;
         height: 55px;
+        width: 100%;
+        position: fixed;
+        z-index: 100;
+    }
+    main {
+        height: 100%;
+        padding-top: 55px;
     }
     .content {
         padding: 25px;

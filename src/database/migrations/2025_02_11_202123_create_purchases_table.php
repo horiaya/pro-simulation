@@ -18,6 +18,9 @@ class CreatePurchasesTable extends Migration
             $table->integer('user_id');
             $table->integer('item_id');
             $table->integer('payment_id');
+            $table->string('post_code', 8);
+            $table->string('address', 100);
+            $table->string('building_name', 100)->nullable();
             $table->timestamps();
         });
     }

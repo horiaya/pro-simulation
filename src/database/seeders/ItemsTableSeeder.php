@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Models\Item;
 
 class ItemsTableSeeder extends Seeder
 {
@@ -14,6 +15,8 @@ class ItemsTableSeeder extends Seeder
      */
     public function run()
     {
+        Item::truncate();
+
         $param = [
             'user_id' => '1',
             'item_name' => '腕時計',
@@ -35,7 +38,7 @@ class ItemsTableSeeder extends Seeder
         DB::table('items')->insert($param);
 
         $param = [
-            'user_id' => '2',
+            'user_id' => '1',
             'item_name' => '玉ねぎ３束',
             'item_image' => 'iLoveIMG+d.jpg',
             'condition_id' => '3',
@@ -45,7 +48,7 @@ class ItemsTableSeeder extends Seeder
         DB::table('items')->insert($param);
 
         $param = [
-            'user_id' => '3',
+            'user_id' => '1',
             'item_name' => '革靴',
             'item_image' => 'Leather+Shoes+Product+photo.jpg',
             'condition_id' => '4',
@@ -55,7 +58,7 @@ class ItemsTableSeeder extends Seeder
         DB::table('items')->insert($param);
 
         $param = [
-            'user_id' => '4',
+            'user_id' => '1',
             'item_name' => 'ノートPC',
             'item_image' => 'Living+Room+Laptop.jpg',
             'condition_id' => '1',
@@ -65,7 +68,7 @@ class ItemsTableSeeder extends Seeder
         DB::table('items')->insert($param);
 
         $param = [
-            'user_id' => '5',
+            'user_id' => '2',
             'item_name' => 'マイク',
             'item_image' => 'Music+Mic+4632231.jpg',
             'condition_id' => '2',
@@ -85,7 +88,7 @@ class ItemsTableSeeder extends Seeder
         DB::table('items')->insert($param);
 
         $param = [
-            'user_id' => '1',
+            'user_id' => '2',
             'item_name' => 'タンブラー',
             'item_image' => 'Tumbler+souvenir.jpg',
             'condition_id' => '4',
@@ -95,7 +98,7 @@ class ItemsTableSeeder extends Seeder
         DB::table('items')->insert($param);
 
         $param = [
-            'user_id' => '3',
+            'user_id' => '2',
             'item_name' => 'コーヒーミル',
             'item_image' => 'Waitress+With+Coffee+Grinder.jpg',
             'condition_id' => '1',
@@ -105,7 +108,7 @@ class ItemsTableSeeder extends Seeder
         DB::table('items')->insert($param);
 
         $param = [
-            'user_id' => '1',
+            'user_id' => '2',
             'item_name' => 'メイクセット',
             'item_image' => '外出メイクアップセット.jpg',
             'condition_id' => '2',

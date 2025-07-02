@@ -62,7 +62,7 @@ class Item extends Model
         return $query;
     }
 
-    public function transaction()
+    public function transactions()
     {
         return $this->hasOne(Transaction::class);
     }
