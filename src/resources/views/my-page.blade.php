@@ -13,7 +13,14 @@
             @else
                 <div class="mypage__placeholder"></div>
             @endif
-            <h2 class="mypage__user-name">{{ $user->name }}</h2>
+            <div class="mypage__user--center">
+                <h2 class="mypage__user-name">{{ $user->name }}</h2>
+                <div class="mypage__review">
+                    @for ($i = 1; $i <= 5; $i++)
+                        <i class="fa-solid fa-star mypage__review-icon"></i>
+                    @endfor
+                </div>
+            </div>
             <div class="mypage__profile">
                 <a class="mypage__profile-link" href="{{ route('profile.edit') }}">プロフィールを編集</a>
             </div>

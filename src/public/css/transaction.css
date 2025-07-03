@@ -21,6 +21,21 @@
     font-size: 20px;
     padding-top: 10px;
 }
+.transaction__others-list {
+    display: flex;
+    justify-content: center;
+}
+.transaction__others-list-item {
+    display: block;
+    background-color: #e2dede;
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+.transaction__others-link {
+    text-decoration: none;
+    color: black;
+}
 
 
 .transaction__group--right {
@@ -91,7 +106,6 @@
     flex-direction: column;
     flex: 1 1 auto;
     overflow-y: auto;
-    background-color: aquamarine;
 }
 .message-group {
     max-width: 45%;
@@ -135,6 +149,19 @@
     border-radius: 3px;
     max-width: 100%;
     word-wrap: break-word;
+    flex-direction: column-reverse;
+}
+.message-content__txt {
+    margin: 3px 0 0 0;
+    display: block;
+}
+.message-content__img {
+    max-width: 500px;
+    max-height: 300px;
+    width: auto;
+    height: auto;
+    display: block;
+    border-radius: 3px;
 }
 .message__edit {
     display: flex;
@@ -145,4 +172,85 @@
 }
 .message__delete {
     margin-left: 20px;
+}
+
+
+.transaction-group__footer {
+    padding: 8px 0 15px;
+}
+.transaction__footer-form {
+    display: flex;
+    justify-content: space-around;
+}
+.transaction__footer--left {
+    width: 70%;
+}
+.transaction__footer-txt {
+    padding: 8px 20px;
+    color: rgb(77, 75, 75);
+    font-weight: bold;
+    border: 1px solid gray;
+    border-radius: 3px;
+    width: 100%;
+}
+.transaction__footer--right {
+    display: flex;
+    align-items: center;
+}
+.transaction__preview-img {
+    display: none;
+    background-color: aquamarine;
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+    max-width: 80px;
+}
+.transaction__footer-label {
+    color: #ff5151;
+    border: 1px solid #ff5151;
+    border-radius: 5px;
+    padding: 3px 10px;
+    font-size: 15px;
+}
+.transaction__footer-form-btn {
+    border: none;
+    background-color: white;
+}
+.fa-paper-plane {
+    font-size: 25px;
+    margin-left: 10px;
+}
+
+.review-modal {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 101;
+}
+.review-modal-content {
+    background-color: rgb(237, 234, 173);
+    border-radius: 8px;
+    border: 1px solid black;
+    max-width: 400px;
+    width: 90%;
+    padding: 0;
+}
+.review-modal-title {
+    font-size: 25px;
+    border-bottom: 1px solid black;
+    padding: 15px 0 5px 10px;
+    margin: 0;
+}
+.review-modal-txt {
+    color: gray;
+    margin: 10px 0 10px 10px;
+}
+.fa-star {
+    font-size: 45px;
 }

@@ -66,4 +66,8 @@ class Item extends Model
     {
         return $this->hasOne(Transaction::class);
     }
+    public function seller()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

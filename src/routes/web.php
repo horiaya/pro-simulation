@@ -95,6 +95,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/mypage', [MyPageController::class, 'index'])->name('mypage.index');
     Route::get('/transaction/{itemId}', [TransactionController::class, 'index'])->name('transaction.index');
+    Route::post('/transaction/{transaction}/message',[TransactionController::class, 'storeMessage'])
+    ->name('transaction.message.store');
+    Route::post('/transactions/{transaction}/complete', [TransactionController::class, 'complete'])->name('transactions.complete');
+    Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
+    Route::post('/transactions/review', [TransactionController::class, 'reviewStore'])->name('reviews.store');
 
     Route::get('/sell', [SellController::class, 'create'])->name('sell.create');
     Route::post('/sell', [SellController::class, 'store'])->name('sell.store');

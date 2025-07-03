@@ -22,8 +22,19 @@
     object-fit: cover;
     margin-left: 250px;
 }
+.mypage__user--center {
+    margin: 30px 50px 0 30px;
+}
 .mypage__user-name {
-    margin: 0 100px;
+    margin: 0 50px 0 30px;
+}
+.mypage__review {
+    width: 200px;
+    margin-top: 5px;
+}
+.mypage__review-icon {
+    font-size: 25px;
+    color: #ccc;
 }
 
 .item__list-tab {
