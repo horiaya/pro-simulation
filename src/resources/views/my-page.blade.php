@@ -15,11 +15,14 @@
             @endif
             <div class="mypage__user--center">
                 <h2 class="mypage__user-name">{{ $user->name }}</h2>
-                <div class="mypage__review">
-                    @for ($i = 1; $i <= 5; $i++)
-                        <i class="fa-solid fa-star mypage__review-icon"></i>
-                    @endfor
-                </div>
+
+                @if ($average)
+                    <div class="mypage__review">
+                        @for ($i = 1; $i <= 5; $i++)
+                            <span class="mypage__review-icon" style="color: {{ $i <= $average ? 'gold' : 'lightgray' }}">★</span>
+                        @endfor
+                    </div>
+                @endif
             </div>
             <div class="mypage__profile">
                 <a class="mypage__profile-link" href="{{ route('profile.edit') }}">プロフィールを編集</a>
@@ -29,6 +32,9 @@
             <button onclick="showTab('sell')" id="sellBtn" class="active">出品した商品</button>
             <button onclick="showTab('purchase')" id="purchaseBtn">購入した商品</button>
             <button onclick="showTab('trading')" id="tradingBtn">取引中の商品</button>
+            @if ($totalUnreadCount > 0)
+                <span class="total-badge">{{ $totalUnreadCount }}</span>
+            @endif
         </div>
         <div id="sellTab" class="sell-item item-group">
         @if($items->isEmpty())
@@ -63,8 +69,11 @@
                 <p>取引中の商品はありません。</p>
             @else
                 @foreach($transactions as $transaction)
-                    <div class="item__list">
+                    <div class="item__list transaction__item-list">
                         <a href="{{ route('transaction.index', ['itemId' => $transaction->item_id]) }}">
+                            @if ($transaction->unread_count > 0)
+                                <span class="unread-badge">{{ $transaction->unread_count }}</span>
+                            @endif
                             <img class="item__list-img" src="{{ Storage::url('item_image/' . $transaction->item->item_image) }}" alt="商品画像">
                         </a>
                         <p class="item__list-name">{{ $transaction->item->item_name }}</p>

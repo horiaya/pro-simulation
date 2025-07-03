@@ -20,15 +20,48 @@ class MyPageController extends Controller
 
         $items = Item::where('user_id', $user->id)->get();
 
-        $purchases = Purchase::with('item')->where('user_id', $user->id)->get();
-
-        //$reviewer = Review::with('user')->where('reviewer', $user->id)->get();
-
-        $transactions = Transaction::with('item')
-            ->where('buyer_id', $user->id)
-            ->where('status', '!=', 'completed')
+        $purchases = Purchase::with('item')
+            ->where('user_id', $user->id)
             ->get();
 
-        return view('my-page', compact('user', 'items', 'purchases', 'transactions'));
+        $transactions = Transaction::with(['item', 'messages'])
+            ->where(function ($query) use ($user) {
+                $query->where(function ($q) use ($user) {
+                    $q->where('buyer_id', $user->id)
+                        ->where('status', '!=', 'completed');
+                })
+                ->orWhere(function ($q) use ($user) {
+                    $q->whereHas('item', function ($itemQ) use ($user) {
+                        $itemQ->where('user_id', $user->id);
+                    })
+                    ->where('status', '!=', 'completed')
+                    ->whereHas('messages', function ($msgQ) use ($user) {
+                        $msgQ->where('sender_id', '!=', $user->id);
+                    });
+                });
+            })
+            ->get();
+
+        foreach ($transactions as $transaction) {
+            $isBuyer = $transaction->buyer_id === $user->id;
+
+            $lastRead = $isBuyer ? $transaction->last_read_at_buyer : $transaction->last_read_at_seller;
+
+            $unreadCount = $transaction->messages()
+                ->where('sender_id', '!=', $user->id)
+                ->when($lastRead, function ($q) use ($lastRead) {
+                    $q->where('created_at', '>', $lastRead);
+                })
+                ->count();
+
+            $transaction->unread_count = $unreadCount;
+        }
+
+        $totalUnreadCount = $transactions->sum('unread_count');
+
+        $average = Review::where('reviewee_id', $user->id)->avg('rating');
+        $average = $average ? round($average) : null;
+
+        return view('my-page', compact('user', 'items', 'purchases', 'purchases', 'transactions', 'average', 'totalUnreadCount'));
     }
 }

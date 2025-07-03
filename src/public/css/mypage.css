@@ -40,6 +40,12 @@
 .item__list-tab {
     margin-top: 35px;
 }
+.total-badge {
+    background-color: #ff5151;
+    color: white;
+    padding: 3px 6px;
+    border-radius: 50%;
+}
 
 #sellBtn, #purchaseBtn, #tradingBtn {
     border: none;
@@ -52,6 +58,18 @@
 #purchaseBtn.active,
 #tradingBtn.active {
     color: #ff5151;
+}
+
+.transaction__item-list {
+    position: relative;
+}
+.unread-badge {
+    background-color: #ff5151;
+    color: white;
+    position: absolute;
+    z-index: 90;
+    padding: 2px 8px;
+    border-radius: 50%;
 }
 
 @media screen and (max-width: 850px){

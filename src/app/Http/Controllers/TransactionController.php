@@ -12,6 +12,7 @@ use App\Models\Transaction;
 use App\Models\Review;
 use App\Models\TransactionMessage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class TransactionController extends Controller
 {
@@ -24,10 +25,31 @@ class TransactionController extends Controller
                 ->with(['buyer',  'item.user'])
                 ->firstOrFail();
 
-        $otherTransactions = Transaction::where('buyer_id', Auth::id())
-                ->where('id', '!=', $transactions->id)
-                ->with(['item'])
-                ->get();
+            if ($user->id === $transactions->buyer_id) {
+                $transactions->last_read_at_buyer = now();
+            } else {
+                $transactions->last_read_at_seller = now();
+            }
+            $transactions->save();
+
+        $otherTransactions = Transaction::with(['item'])
+            ->where(function ($query) use ($user) {
+                $query->where(function ($q) use ($user) {
+                    $q->where('buyer_id', $user->id)
+                    ->where('status', '!=', 'completed');
+                })
+                ->orWhere(function ($q) use ($user) {
+                    $q->whereHas('item', function ($itemQ) use ($user) {
+                        $itemQ->where('user_id', $user->id);
+                    })
+                    ->where('status', '!=', 'completed')
+                    ->whereHas('messages', function ($msgQ) use ($user) {
+                        $msgQ->where('sender_id', '!=', $user->id);
+                    });
+                });
+            })
+            ->where('id', '!=', $transactions->id)
+            ->get();
 
         $transactionMessages = TransactionMessage::where('transaction_id', $transactions->id)
                 ->with('user')
@@ -40,12 +62,12 @@ class TransactionController extends Controller
     public function storeMessage(Request $request, Transaction $transaction)
     {
         $validated = $request->validate([
-            'message' => 'nullable|required_without:image|string|max:500',
+            'message' => 'nullable|required_without:image|string|max:400',
             'image'   => 'nullable|image|mimes:jpeg,png'
         ],[
             'message.required_without' => 'メッセージまたは画像を入力してください。',
             'message.string' => 'メッセージは文字列で入力してください。',
-            'message.max' => 'メッセージは500文字以内で入力してください。',
+            'message.max' => 'メッセージは400文字以内で入力してください。',
             'image.image' => 'アップロードするファイルは画像形式にしてください。',
             'image.mimes' => '画像はJPEGまたはPNG形式でアップロードしてください。',
             'image.max' => '画像のサイズは5MB以内にしてください。',
@@ -55,9 +77,6 @@ class TransactionController extends Controller
             'sender_id' => Auth::id(),
             'message'   => $validated['message'] ?? null,
         ];
-
-        \Log::info('Files:', $request->allFiles());
-\Log::info('Has file: ' . ($request->hasFile('image') ? 'yes' : 'no'));
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('transaction_image', 'public');
@@ -89,18 +108,67 @@ class TransactionController extends Controller
 
     public function reviewStore(Request $request)
     {
+        $transaction = Transaction::findOrFail($request->transaction_id);
+
+        $revieweeId = auth()->id() === $transaction->buyer_id
+        ? $transaction->item->user->id
+        : $transaction->buyer_id;
+
         $review = new Review();
+        $review->transaction_id = $transaction->id;
         $review->reviewer_id = auth()->id();
-        $review->reviewee_id = $request->reviewee_id;
+        $review->reviewee_id = $revieweeId;
         $review->rating = $request->rating;
         $review->save();
 
-        $average = Review::where('reviewee_id', $review->reviewee_id)->avg('rating');
+        return redirect()->route('index')->with('success', 'レビューを送信しました！');
+    }
 
-        $user = User::find($review->reviewee_id);
-        $user->rating = $average;
-        $user->save();
+    public function update(Request $request, $id)
+    {
+        $message = TransactionMessage::where('id', $id)
+            ->where('sender_id', Auth::id())
+            ->firstOrFail();
 
-        return redirect()->route('mypage')->with('success', 'レビューを送信しました！');
+        $validated = $request->validate([
+            'message' => 'nullable|string|max:400',
+            'image' => 'nullable|image|mimes:jpeg,png',
+        ],[
+            'message.required_without' => 'メッセージまたは画像を入力してください。',
+            'message.string' => 'メッセージは文字列で入力してください。',
+            'message.max' => 'メッセージは400文字以内で入力してください。',
+            'image.image' => 'アップロードするファイルは画像形式にしてください。',
+            'image.mimes' => '画像はJPEGまたはPNG形式でアップロードしてください。',
+            'image.max' => '画像のサイズは5MB以内にしてください。',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($message->image_path) {
+                Storage::delete($message->image_path);
+            }
+            $validated['image_path'] = $request->file('image')->store('transaction_images', 'public');
+        } else {
+            $validated['image_path'] = $message->image_path;
+        }
+
+        $message->update([
+            'message' => $validated['message'],
+            'image_path' => $validated['image_path'],
+        ]);
+
+        return response()->json(['message' => $message->load('user')]);
+    }
+
+    public function destroy($id)
+    {
+        $message = TransactionMessage::where('id', $id)->where('sender_id', Auth::id())->firstOrFail();
+
+        if ($message->image_path) {
+            Storage::disk('public')->delete($message->image_path);
+        }
+
+        $message->delete();
+
+        return back()->with('status', 'メッセージを削除しました');
     }
 }
