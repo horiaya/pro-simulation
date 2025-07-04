@@ -180,6 +180,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewImage = document.getElementById('image-preview');
     const methodInput = document.getElementById('form-method');
     const editIdInput = document.getElementById('edit-id');
+    const STORAGE_KEY = 'transaction_message_draft';
+    const savedDraft = localStorage.getItem(STORAGE_KEY);
+
+    if (savedDraft) {
+        messageInput.value = savedDraft;
+    }
+
+    messageInput.addEventListener('input', () => {
+        localStorage.setItem(STORAGE_KEY, messageInput.value);
+    });
+
+    form.addEventListener('submit', () => {
+        localStorage.removeItem(STORAGE_KEY);
+    });
 
     imageInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
