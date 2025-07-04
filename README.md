@@ -7,7 +7,7 @@
 デプロイは未実施のため、ローカル環境で実行してください
 
 ## 機能一覧
-ログイン機能・購入機能・出品機能・お気に入り登録・プロフィール設定
+ログイン機能・購入機能・出品機能・お気に入り登録・プロフィール設定・取引チャット機能・レビュー機能
 
 ## 使用技術（ローカル環境）
 バージョン：Laravel Framework 8.83.29
@@ -112,8 +112,16 @@ MAIL_FROM_NAME=laravel.app
 
 StripeのWebhookをローカルで受け取るために、[ngrok](https://ngrok.com/) を使用しています。
 
-以下のようにngrokを起動して、StripeのWebhookに登録してください：
+php.ini内に
+```sh
+RUN wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz \
+  && tar -xvzf ngrok-v3-stable-linux-amd64.tgz \
+  && mv ngrok /usr/local/bin/ngrok \
+  && rm ngrok-v3-stable-linux-amd64.tgz
+```
+と追記してください
 
+phpコンテナ内で下記コマンドを実行してください。ngrokを起動して、StripeのWebhookに登録してください
 ```bash
 ngrok http 80
 ```
