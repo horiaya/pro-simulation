@@ -134,7 +134,7 @@
                                 <input id="edit-image-{{ $transactionMessage->id }}" name="image" type="file" accept="image/*" style="display:none;">
                                 <label class="transaction__footer-label" for="edit-image-{{ $transactionMessage->id }}">画像を変更</label>
                                 <button type="button" onclick="submitEdit({{ $transactionMessage->id }})">更新</button>
-                                <button type="submit" onclick="closeEditForm({{ $transactionMessage->id }})" style="background-color:gray;">キャンセル</button>
+                                <button type="button" onclick="closeEditForm({{ $transactionMessage->id }})" style="background-color:gray;">キャンセル</button>
                             </form>
                         </div>
                     @endif
@@ -234,8 +234,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const msg = data.message;
-
             const isMyMessage = msg.sender_id == {{ Auth::id() }};
+            const safeImagePath = msg.image_path ? msg.image_path.replace(/\\/g, '') : '';
+            const safeMessage = msg.message ? msg.message.replace(/'/g, "\\'") : '';
 
             const html = `
                     <div id="message-${msg.id}" class="message-group ${isMyMessage ? 'message__myself--right' : 'message__partner--left'}">
@@ -255,7 +256,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="message-group__edit">
                             <div class="message__edit">
                             <a class="message__edit-btn" href="#"
-                                onclick="showEditForm(${msg.id}, '${msg.message.replace(/'/g, "\\'")}', '${msg.image_path ? '/storage/' + msg.image_path : ''}')">編集</a>
+                                onclick="showEditForm(${msg.id},'${safeMessage}','${safeImagePath ? '/storage/' + safeImagePath : ''}'
+                            )">編集</a>
                             </div>
                             <div class="message__delete">
                             <form method="POST" action="/transaction-message/${msg.id}">
@@ -339,20 +341,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
 
+            const safeMessage = data.message.message ? data.message.message.replace(/'/g, "\\'") : '';
+            const safeImagePath = data.message.image_path ? data.message.image_path.replace(/\\/g, '') : '';
+
             const content = document.getElementById(`message-content-${id}`);
             let html = '';
-            if (data.message.message) {
-                html += `<p>${data.message.message}</p>`;
+            if (safeMessage) {
+                html += `<p>${safeMessage}</p>`;
             }
-            if (data.message.image_path) {
-                html += `<img src="/storage/${data.message.image_path}" alt="取引画像">`;
+            if (safeImagePath) {
+                html += `<img src="/storage/${safeImagePath}" alt="取引画像">`;
             }
             content.innerHTML = html;
 
             const editLink = document.querySelector(`#message-${id} .message__edit a`);
             editLink.setAttribute(
                 'onclick',
-                `showEditForm(${id}, '${data.message.message.replace(/'/g, "\\'")}', '${data.message.image_path ? '/storage/' + data.message.image_path : ''}')`
+                `showEditForm(${id}, '${safeMessage}', '${safeImagePath ? '/storage/' + safeImagePath : ''}')`
             );
 
             closeEditForm(id);
