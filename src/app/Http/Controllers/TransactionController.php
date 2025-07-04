@@ -81,7 +81,7 @@ class TransactionController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('transaction_image', 'public');
+            $path = $request->file('image')->store('transaction_images', 'public');
             $data['image_path'] = $path;
         }
 
@@ -102,19 +102,25 @@ class TransactionController extends Controller
         }
 
         $transaction->status = 'completed';
+        $transaction->completed_at = now();
         $transaction->save();
+
+        Transaction::where('status', 'completed')
+            ->where('completed_at', '<', now()->subDays(7))
+            ->each(function ($transaction) {
+                foreach ($transaction->messages as $message) {
+                    if ($message->image_path) {
+                        \Storage::disk('public')->delete($message->image_path);
+                    }
+                    $message->delete();
+                }
+        });
 
         $seller = $transaction->item->user;
         Mail::to($seller->email)->send(new TransactionCompletedMail($transaction));
 
         return redirect()->back();
     }
-
-    /*public function show($id)
-    {
-        $transaction = Transaction::findOrFail($id);
-        return view('transactions.show', compact('transaction'));
-    }*/
 
     public function reviewStore(Request $request)
     {
