@@ -119,12 +119,13 @@ StripeのWebhookをローカルで受け取るために、[ngrok](https://ngrok.
 phpコンテナ内で下記コマンドを実行してください。ngrokを起動して、StripeのWebhookに登録してください
 
 Stripeにログイン後に下記を実行してください。
-```sh
+初回
+```bash
 ngrok config add-authtoken <your_authtoken>
 ```
 
 ```bash
-ngrok http 80
+ngrok http nginx:80
 ```
 ForwardingのURLをイベントの送信先に編集し、末尾に/api/webhook/stripeを記述してください
 
