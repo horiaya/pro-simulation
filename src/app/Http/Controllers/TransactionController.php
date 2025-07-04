@@ -13,6 +13,8 @@ use App\Models\Review;
 use App\Models\TransactionMessage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TransactionCompletedMail;
 
 class TransactionController extends Controller
 {
@@ -94,17 +96,25 @@ class TransactionController extends Controller
     public function complete($id)
     {
         $transaction = Transaction::findOrFail($id);
+
+        if (Auth::id() !== $transaction->buyer_id) {
+            abort(403);
+        }
+
         $transaction->status = 'completed';
         $transaction->save();
 
-        return redirect()->route('transactions.show', $transaction->id);
+        $seller = $transaction->item->user;
+        Mail::to($seller->email)->send(new TransactionCompletedMail($transaction));
+
+        return redirect()->back();
     }
 
-    public function show($id)
+    /*public function show($id)
     {
         $transaction = Transaction::findOrFail($id);
         return view('transactions.show', compact('transaction'));
-    }
+    }*/
 
     public function reviewStore(Request $request)
     {

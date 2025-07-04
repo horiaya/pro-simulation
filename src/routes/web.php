@@ -101,7 +101,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/transaction-message/{id}', [TransactionController::class, 'destroy'])->name('transaction-message.destroy');
 
     Route::post('/transactions/{transaction}/complete', [TransactionController::class, 'complete'])->name('transactions.complete');
-    Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
+    //Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
     Route::post('/transactions/review', [TransactionController::class, 'reviewStore'])->name('reviews.store');
 
     Route::get('/sell', [SellController::class, 'create'])->name('sell.create');

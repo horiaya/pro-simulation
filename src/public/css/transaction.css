@@ -21,20 +21,20 @@
     font-size: 20px;
     padding-top: 10px;
 }
-.transaction__others-list {
-    display: flex;
-    justify-content: center;
-}
+
 .transaction__others-list-item {
     display: block;
     background-color: #e2dede;
     padding: 5px 10px;
     border-radius: 10px;
-    margin-top: 20px;
+    margin: 20px 5px 0 5px;
+    width: 90%;
+    text-align: center;
 }
 .transaction__others-link {
     text-decoration: none;
     color: black;
+    font-size: min(5vw, 15px);
 }
 
 
