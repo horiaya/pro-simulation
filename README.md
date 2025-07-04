@@ -109,6 +109,10 @@ MAIL_FROM_NAME=laravel.app
 3. 決済後、購入完了画面に遷移
 
 ### Webhook設定について（開発用）
+.envファイルに下記を追加し、APIキーを設定してください。
+STRIPE_SECRET=
+STRIPE_PUBLIC_KEY=
+STRIPE_WEBHOOK_SECRET=
 
 StripeのWebhookをローカルで受け取るために、[ngrok](https://ngrok.com/) を使用しています。
 
