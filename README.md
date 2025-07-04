@@ -131,3 +131,4 @@ ngrok http 80
 - ユーザー名：　テストa
 - メールアドレス：　aaa@aaa.com
 - パスワード：　aaaa1234
+ダミーユーザは上記含めて3人分をUserTableSeederで用意してます。
