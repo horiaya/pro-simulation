@@ -112,15 +112,6 @@ MAIL_FROM_NAME=laravel.app
 
 StripeのWebhookをローカルで受け取るために、[ngrok](https://ngrok.com/) を使用しています。
 
-php.ini内に
-```sh
-RUN wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz \
-  && tar -xvzf ngrok-v3-stable-linux-amd64.tgz \
-  && mv ngrok /usr/local/bin/ngrok \
-  && rm ngrok-v3-stable-linux-amd64.tgz
-```
-と追記してください
-
 phpコンテナ内で下記コマンドを実行してください。ngrokを起動して、StripeのWebhookに登録してください
 ```bash
 ngrok http 80
