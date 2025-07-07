@@ -81,6 +81,9 @@ php artisan key:generate
 
 # マイグレーションの実行（初回のみ）
 php artisan migrate
+
+#　シンボルリンクの作成
+php artisan storage:link
 ```
 
 ### 6、アクセス
