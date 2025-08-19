@@ -111,6 +111,16 @@ MAIL_FROM_NAME=laravel.app
 2. Stripeのテスト決済画面でカード情報を入力  
 3. 決済後、購入完了画面に遷移
 
+### ローカル環境からStripeに接続するためにngrokをインストールします。
+Dockerfileに追加してください。
+```sh
+RUN wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz \
+  && tar -xvzf ngrok-v3-stable-linux-amd64.tgz \
+  && mv ngrok /usr/local/bin/ngrok \
+  && rm ngrok-v3-stable-linux-amd64.tgz
+```
+
+
 ### Webhook設定について（開発用）
 .envファイルに下記を追加し、APIキーと署名シークレットを設定してください。
 
