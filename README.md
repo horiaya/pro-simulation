@@ -113,8 +113,11 @@ MAIL_FROM_NAME=laravel.app
 
 ### Webhook設定について（開発用）
 .envファイルに下記を追加し、APIキーと署名シークレットを設定してください。
+
 STRIPE_SECRET=
+
 STRIPE_PUBLIC_KEY=
+
 STRIPE_WEBHOOK_SECRET=
 
 StripeのWebhookをローカルで受け取るために、[ngrok](https://ngrok.com/) を使用しています。
