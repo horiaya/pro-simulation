@@ -118,6 +118,7 @@ STRIPE_PUBLIC_KEY=
 STRIPE_WEBHOOK_SECRET=
 
 StripeのWebhookをローカルで受け取るために、[ngrok](https://ngrok.com/) を使用しています。
+Webhookのイベント送信先の設定はcheckout.session.completedを選択してください。
 
 phpコンテナ内で下記コマンドを実行してください。ngrokを起動して、StripeのWebhookに登録してください
 
