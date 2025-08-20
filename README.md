@@ -22,7 +22,7 @@
 
 メール認証：MailHog
 
-決済機能：Stripe / Webhook / ngrok
+決済機能：Stripe / Webhook 
 
 ## テーブル設計
 [テーブル設計](https://docs.google.com/spreadsheets/d/1OD4KdAFMQVUMECPXe2c-7Nr6lRiEDCsaDZ6IcZsRwOk/edit?gid=1188247583#gid=1188247583)
@@ -106,20 +106,14 @@ MAIL_FROM_NAME=laravel.app
 ## 決済機能（Stripe）
 [Stripe](https://stripe.com/jp) のサンドボックス（テスト環境）を利用して決済機能を実装しています。
 
+ローカル環境からStripeに接続するためにStripe CLIを使用します。
+
 ### 決済の流れ
 1. 商品を選択し、「購入」ボタンをクリック  
 2. Stripeのテスト決済画面でカード情報を入力  
 3. 決済後、購入完了画面に遷移
 
-### ローカル環境からStripeに接続するためにngrokをインストールします。
-Dockerfileに追加してください。
-```sh
-RUN wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz \
-  && tar -xvzf ngrok-v3-stable-linux-amd64.tgz \
-  && mv ngrok /usr/local/bin/ngrok \
-  && rm ngrok-v3-stable-linux-amd64.tgz
-```
-
+### 
 
 ### Webhook設定について（開発用）
 .envファイルに下記を追加し、APIキーと署名シークレットを設定してください。
@@ -130,21 +124,20 @@ STRIPE_PUBLIC_KEY=
 
 STRIPE_WEBHOOK_SECRET=
 
-StripeのWebhookをローカルで受け取るために、[ngrok](https://ngrok.com/) を使用しています。
-Webhookのイベント送信先の設定はcheckout.session.completedを選択してください。
-
-phpコンテナ内で下記コマンドを実行してください。ngrokを起動して、StripeのWebhookに登録してください
-
-Stripeにログイン後に下記を実行してください。
-初回
-```bash
-ngrok config add-authtoken <your_authtoken>
+```sh
+docker run -it --rm \
+  --network pro-simulation_app-network \
+  stripe/stripe-cli:latest \
+  listen --api-key sk_test_XXXXXXXX \
+  --events checkout.session.completed,payment_intent.succeeded \
+  --forward-to http://nginx:80/api/webhook/stripe
 ```
+（　sk_test_XXXXXXXX はAPIシークレットキーです。）
 
-```bash
-ngrok http nginx:80
-```
-ForwardingのURLをイベントの送信先に編集し、末尾に/api/webhook/stripeを記述してください
+そして、起動直後に表示される whsec_... を .env の STRIPE_WEBHOOK_SECRET に設定します。
+
+起動させたまま実行することで決済が完了されます。
+
 
 ### テスト用カード情報
 
