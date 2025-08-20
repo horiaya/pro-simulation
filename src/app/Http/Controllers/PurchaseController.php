@@ -147,8 +147,6 @@ class PurchaseController extends Controller
 
     public function handleWebhook(Request $request)
     {
-        //\Log::info('✅ WebhookがLaravelに到達しました');
-
         $payload = $request->getContent();
         $sigHeader = $request->header('Stripe-Signature');
         $endpointSecret = config('services.stripe.webhook_secret');
@@ -159,9 +157,6 @@ class PurchaseController extends Controller
             try {
                 $event = \Stripe\Webhook::constructEvent($payload, $sigHeader, $endpointSecret);
             } catch (\Exception $e) {
-                /*Log::error('Webhook署名検証エラー', ['error' => $e->getMessage(),
-            'sigHeader' => $sigHeader,
-            'payload' => $payload,]);*/
                 return response('Invalid payload or signature', 400);
             }
         }
@@ -169,16 +164,12 @@ class PurchaseController extends Controller
     if ($event->type === 'checkout.session.completed') {
         $session = $event->data->object;
 
-        //$metadata = $session->metadata ? $session->metadata->toArray() : [];
-
         if (app()->environment('testing')) {
             $metadata = (array) ($session->metadata ?? []);
         } else {
             $metadata = $session->metadata ? $session->metadata->toArray() : [];
         }
-        /*if (!isset($metadata['user_id'], $metadata['item_id'])) {
-            return response('Missing required metadata', 400);
-        }*/
+
         if (
             empty($metadata['user_id']) ||
             empty($metadata['item_id']) ||
