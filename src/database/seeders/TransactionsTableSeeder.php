@@ -14,13 +14,74 @@ class TransactionsTableSeeder extends Seeder
      */
     public function run()
     {
-        /*$param = [
-            'buyer_id' => 'テストC',
-            'email' => 'ccc@ccc.com',
-            'password' => Hash::make('cccc1234'),
-            'remember_token' => Str::random(10),
-            'email_verified_at' => Carbon::now(),
+        $param = [
+            'buyer_id' => '1',
+            'item_id' => '6',
+            'status' => 'pending',
         ];
-        DB::table('users')->insert($param);*/
+        DB::table('transactions')->insert($param);
+
+        $param = [
+            'buyer_id' => '1',
+            'item_id' => '7',
+            'status' => 'pending',
+        ];
+        DB::table('transactions')->insert($param);
+
+        $param = [
+            'buyer_id' => '1',
+            'item_id' => '8',
+            'status' => 'pending',
+        ];
+        DB::table('transactions')->insert($param);
+
+        $param = [
+            'buyer_id' => '1',
+            'item_id' => '9',
+            'status' => 'pending',
+        ];
+        DB::table('transactions')->insert($param);
+
+        $param = [
+            'buyer_id' => '1',
+            'item_id' => '10',
+            'status' => 'pending',
+        ];
+        DB::table('transactions')->insert($param);
+
+        $param = [
+            'buyer_id' => '2',
+            'item_id' => '1',
+            'status' => 'pending',
+        ];
+        DB::table('transactions')->insert($param);
+
+        $param = [
+            'buyer_id' => '2',
+            'item_id' => '2',
+            'status' => 'pending',
+        ];
+        DB::table('transactions')->insert($param);
+
+        $param = [
+            'buyer_id' => '2',
+            'item_id' => '3',
+            'status' => 'pending',
+        ];
+        DB::table('transactions')->insert($param);
+
+        $param = [
+            'buyer_id' => '2',
+            'item_id' => '4',
+            'status' => 'pending',
+        ];
+        DB::table('transactions')->insert($param);
+
+        $param = [
+            'buyer_id' => '2',
+            'item_id' => '5',
+            'status' => 'pending',
+        ];
+        DB::table('transactions')->insert($param);
     }
 }
