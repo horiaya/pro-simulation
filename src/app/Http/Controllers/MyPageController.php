@@ -34,9 +34,13 @@ class MyPageController extends Controller
                     $q->whereHas('item', function ($itemQ) use ($user) {
                         $itemQ->where('user_id', $user->id);
                     })
-                    ->where('status', '!=', 'completed')
-                    ->whereHas('messages', function ($msgQ) use ($user) {
-                        $msgQ->where('sender_id', '!=', $user->id);
+                    ->whereNotNull('buyer_id')
+                    ->where('status', '!=', 'completed');
+                })
+                ->orWhere(function ($q) use ($user) {
+                    $q->where('status', 'completed')
+                    ->whereDoesntHave('reviews', function ($r) use ($user) {
+                        $r->where('reviewer_id', $user->id);
                     });
                 });
             })

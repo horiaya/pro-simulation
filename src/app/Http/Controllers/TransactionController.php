@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TransactionCompletedMail;
+use App\Http\Requests\TransactionMessageRequest;
 
 class TransactionController extends Controller
 {
@@ -24,6 +25,12 @@ class TransactionController extends Controller
         $item = Item::findOrFail($itemId);
 
         $transactions = Transaction::where('item_id', $itemId)
+            ->where(function ($q) use ($user) {
+                $q->where('buyer_id', $user->id)
+                ->orWhereHas('item', function ($iq) use ($user) {
+                    $iq->where('user_id', $user->id);
+                });
+            })
                 ->with(['buyer',  'item.user'])
                 ->firstOrFail();
 
@@ -34,23 +41,31 @@ class TransactionController extends Controller
             }
             $transactions->save();
 
-        $otherTransactions = Transaction::with(['item'])
-            ->where(function ($query) use ($user) {
-                $query->where(function ($q) use ($user) {
-                    $q->where('buyer_id', $user->id)
-                    ->where('status', '!=', 'completed');
-                })
-                ->orWhere(function ($q) use ($user) {
-                    $q->whereHas('item', function ($itemQ) use ($user) {
-                        $itemQ->where('user_id', $user->id);
-                    })
-                    ->where('status', '!=', 'completed')
-                    ->whereHas('messages', function ($msgQ) use ($user) {
-                        $msgQ->where('sender_id', '!=', $user->id);
+        $whereVisible = function ($q) use ($user) {
+            $q->where('status', 'pending')
+            ->orWhere(function ($q) use ($user) {
+                $q->where('status', 'completed')
+                    ->whereDoesntHave('reviews', function ($rq) use ($user) {
+                        $rq->where('reviewer_id', $user->id);
                     });
-                });
             })
+            ->orWhere(function ($q) use ($user) {
+                $q->whereHas('item', function ($iq) use ($user) {
+                    $iq->where('user_id', $user->id);
+                })
+                ->whereNotNull('buyer_id')
+                ->whereDoesntHave('reviews', function ($rq) use ($user) {
+                    $rq->where('reviewer_id', $user->id);
+            });
+        });
+    };
+
+        $otherTransactions = Transaction::with('item')
+            ->where(fn($q) => $q->where('buyer_id', $user->id)
+                ->orWhereHas('item', fn($iq) => $iq->where('user_id', $user->id)))
+            ->where($whereVisible)
             ->where('id', '!=', $transactions->id)
+            ->latest()
             ->get();
 
         $transactionMessages = TransactionMessage::where('transaction_id', $transactions->id)
@@ -61,19 +76,9 @@ class TransactionController extends Controller
         return view('transaction', compact('user', 'item', 'transactions', 'otherTransactions', 'transactionMessages'));
     }
 
-    public function storeMessage(Request $request, Transaction $transaction)
+    public function storeMessage(TransactionMessageRequest $request, Transaction $transaction)
     {
-        $validated = $request->validate([
-            'message' => 'nullable|required_without:image|string|max:400',
-            'image'   => 'nullable|image|mimes:jpeg,png'
-        ],[
-            'message.required_without' => 'メッセージまたは画像を入力してください。',
-            'message.string' => 'メッセージは文字列で入力してください。',
-            'message.max' => 'メッセージは400文字以内で入力してください。',
-            'image.image' => 'アップロードするファイルは画像形式にしてください。',
-            'image.mimes' => '画像はJPEGまたはPNG形式でアップロードしてください。',
-            'image.max' => '画像のサイズは5MB以内にしてください。',
-        ]);
+        $validated = $request->validated();
 
         $data = [
             'sender_id' => Auth::id(),
@@ -101,11 +106,18 @@ class TransactionController extends Controller
             abort(403);
         }
 
-        $transaction->status = 'completed';
-        $transaction->completed_at = now();
-        $transaction->save();
+        if ($transaction->status !== 'completed') {
+            $transaction->forceFill([
+                'status'       => 'completed',
+                'completed_at' => now(),
+            ])->save();
+        }
 
-        Transaction::where('status', 'completed')
+        /*$transaction->status = 'completed';
+        $transaction->completed_at = now();
+        $transaction->save();*/
+
+        /*Transaction::where('status', 'completed')
             ->where('completed_at', '<', now()->subDays(7))
             ->each(function ($transaction) {
                 foreach ($transaction->messages as $message) {
@@ -114,7 +126,7 @@ class TransactionController extends Controller
                     }
                     $message->delete();
                 }
-        });
+        });*/
 
         $seller = $transaction->item->user;
         Mail::to($seller->email)->send(new TransactionCompletedMail($transaction));
@@ -140,23 +152,13 @@ class TransactionController extends Controller
         return redirect()->route('index')->with('success', 'レビューを送信しました！');
     }
 
-    public function update(Request $request, $id)
+    public function update(TransactionMessageRequest $request, $id)
     {
+        $validated = $request->validated();
+
         $message = TransactionMessage::where('id', $id)
             ->where('sender_id', Auth::id())
             ->firstOrFail();
-
-        $validated = $request->validate([
-            'message' => 'nullable|string|max:400',
-            'image' => 'nullable|image|mimes:jpeg,png',
-        ],[
-            'message.required_without' => 'メッセージまたは画像を入力してください。',
-            'message.string' => 'メッセージは文字列で入力してください。',
-            'message.max' => 'メッセージは400文字以内で入力してください。',
-            'image.image' => 'アップロードするファイルは画像形式にしてください。',
-            'image.mimes' => '画像はJPEGまたはPNG形式でアップロードしてください。',
-            'image.max' => '画像のサイズは5MB以内にしてください。',
-        ]);
 
         if ($request->hasFile('image')) {
             if ($message->image_path) {

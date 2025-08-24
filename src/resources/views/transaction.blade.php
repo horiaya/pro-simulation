@@ -40,7 +40,16 @@
                     <button class="transaction__head-btn" style="{{ $transactions->status === 'completed' ? 'display:none;' : '' }}">取引を完了する</button>
                 </form>
             @endif
-                <div class="review-modal" style="{{ $transactions->status === 'completed' ? '' : 'display:none;' }}">
+            @php
+                $revieweeId = auth()->id() === $transactions->buyer_id
+                    ? $transactions->item->user->id
+                    : $transactions->buyer_id;
+
+                $hasReviewed = \App\Models\Review::where('transaction_id', $transactions->id)
+                    ->where('reviewer_id', auth()->id())
+                    ->exists();
+            @endphp
+                <div class="review-modal" style="{{ $transactions->status === 'completed' && !$hasReviewed ? '' : 'display:none;' }}">
                     <div class="review-modal-content">
                         <p class="review-modal-title">取引が完了しました。</p>
                         <p class="review-modal-txt">今回の取引相手はどうでしたか？</p>
@@ -54,11 +63,6 @@
                         <form id="review-form" method="POST" action="{{ route('reviews.store') }}">
                         @csrf
                             <input type="hidden" name="transaction_id" value="{{ $transactions->id }}">
-                        @php
-                            $revieweeId = auth()->id() === $transactions->buyer_id
-                                ? $transactions->item->user->id
-                                : $transactions->buyer_id;
-                        @endphp
                             <input type="hidden" name="rating" id="rating-value">
                             <div class="review-submit">
                                 <button type="submit">送信する</button>
